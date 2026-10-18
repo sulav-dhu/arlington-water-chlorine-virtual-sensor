@@ -1,0 +1,508 @@
+{
+  "numbers": [
+    {
+      "section": "Data and cleaning",
+      "id": "clean.raw_rows",
+      "value": 58492,
+      "display": "58,492",
+      "label": "rows in the lab export (20 tests)",
+      "source": "data/processed/v1/manifest.json"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.chlorine_results",
+      "value": 37250,
+      "display": "37,250",
+      "label": "total-chlorine field results",
+      "source": "reports/figures/fig6_cleaning_funnel.csv"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.removed.in_routine_sampling_programs",
+      "value": 6414,
+      "display": "6,414",
+      "label": "removed at step 'In routine sampling programs': construction, special projects, NAP, plant and tank programs",
+      "source": "reports/figures/fig6_cleaning_funnel.csv"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.removed.at_distribution_sampling_sites",
+      "value": 83,
+      "display": "83",
+      "label": "removed at step 'At distribution sampling sites': plant taps, ad-hoc addresses",
+      "source": "reports/figures/fig6_cleaning_funnel.csv"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.removed.location_confirmed",
+      "value": 31,
+      "display": "31",
+      "label": "removed at step 'Location confirmed': site code and address disagree",
+      "source": "reports/figures/fig6_cleaning_funnel.csv"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.removed.reportable_result",
+      "value": 5,
+      "display": "5",
+      "label": "removed at step 'Reportable result': 'Not Analyzed', 'Invalid', 'Lab Error'",
+      "source": "reports/figures/fig6_cleaning_funnel.csv"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.removed.one_copy_per_sample",
+      "value": 14,
+      "display": "14",
+      "label": "removed at step 'One copy per sample': same sample logged twice",
+      "source": "reports/figures/fig6_cleaning_funnel.csv"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.modeling_rows",
+      "value": 30703,
+      "display": "30,703",
+      "label": "rows in the modeling table chlorine_v1",
+      "source": "data/processed/v1/manifest.json"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.samples",
+      "value": 30701,
+      "display": "30,701",
+      "label": "modeling samples with a numeric value (2 non-detects excluded)",
+      "source": "data/processed/v1/chlorine_v1.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.locations",
+      "value": 221,
+      "display": "221",
+      "label": "sampling locations (site codes resolved to physical locations)",
+      "source": "data/processed/v1/chlorine_v1.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.places",
+      "value": 208,
+      "display": "208",
+      "label": "places (place groups) sampled",
+      "source": "data/processed/v1/chlorine_v1.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.period",
+      "value": [
+        "2015-01-01",
+        "2026-07-31"
+      ],
+      "display": "Jan 2015 - Jul 2026",
+      "label": "first and last modeling sample",
+      "source": "data/processed/v1/chlorine_v1.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.samples_per_year",
+      "value": 2651.5819933790494,
+      "display": "2,652",
+      "label": "modeling samples per year",
+      "source": "data/processed/v1/chlorine_v1.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.fix.address_linked",
+      "value": 137,
+      "display": "137",
+      "label": "samples linked to their site by address instead of code",
+      "source": "src/chlorine/reporting/figures.py:funnel_numbers, data/processed/v1/measurements.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.fix.multi_spelling_codes",
+      "value": 73,
+      "display": "73",
+      "label": "site codes with several address spellings, reconciled",
+      "source": "src/chlorine/reporting/figures.py:funnel_numbers, data/processed/v1/measurements.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.fix.grouped_places",
+      "value": 11,
+      "display": "11",
+      "label": "renumbered or moved sites grouped as one place",
+      "source": "src/chlorine/reporting/figures.py:funnel_numbers, data/processed/v1/measurements.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.fix.duplicates_removed",
+      "value": 785,
+      "display": "785",
+      "label": "duplicate copies removed (all tests)",
+      "source": "src/chlorine/reporting/figures.py:funnel_numbers, data/processed/v1/measurements.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.fix.phone_rows",
+      "value": 237,
+      "display": "237",
+      "label": "rows with a customer phone number, never written out",
+      "source": "src/chlorine/reporting/figures.py:funnel_numbers, Chlorine_residual_2015-2027.xlsx (local, never copied)"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.fix.geocoded_share",
+      "value": 0.9994137380711983,
+      "display": "99.9%",
+      "label": "share of samples geocoded locally",
+      "source": "src/chlorine/reporting/figures.py:funnel_numbers, data/processed/v1/measurements.parquet"
+    },
+    {
+      "section": "Data and cleaning",
+      "id": "clean.gis_layers",
+      "value": {
+        "address_points": 102855,
+        "hydrants": 12321,
+        "road_centerlines": 17322
+      },
+      "display": "102,855 address points, 12,321 hydrants, 17,322 road centerlines",
+      "label": "public city GIS features used for geocoding and covariates",
+      "source": "data/processed/v1/manifest.json"
+    },
+    {
+      "section": "Noise floor and sources of variation",
+      "id": "noise.measurement_sd",
+      "value": 0.1379110018977617,
+      "display": "0.14 mg/L",
+      "label": "measurement noise: SD of same-moment replicate readings (18 pairs)",
+      "source": "data/eval/val/run.json"
+    },
+    {
+      "section": "Noise floor and sources of variation",
+      "id": "noise.within_week_sd",
+      "value": 0.2773464947019854,
+      "display": "0.28 mg/L",
+      "label": "within-week scatter at the near-daily sites: the error of knowing each place's weekly mean exactly",
+      "source": "data/eval/val/run.json"
+    },
+    {
+      "section": "Noise floor and sources of variation",
+      "id": "var.city_week",
+      "value": 0.3764815855396347,
+      "display": "38%",
+      "label": "share of variance: City-wide weekly level (SD 0.35 mg/L)",
+      "source": "reports/figures/fig8_variance_breakdown.csv"
+    },
+    {
+      "section": "Noise floor and sources of variation",
+      "id": "var.site_level",
+      "value": 0.1737028021208008,
+      "display": "17%",
+      "label": "share of variance: Site's long-run level (SD 0.24 mg/L)",
+      "source": "reports/figures/fig8_variance_breakdown.csv"
+    },
+    {
+      "section": "Noise floor and sources of variation",
+      "id": "var.local_week",
+      "value": 0.2144029671392796,
+      "display": "21%",
+      "label": "share of variance: Local site-week deviation (SD 0.26 mg/L)",
+      "source": "reports/figures/fig8_variance_breakdown.csv"
+    },
+    {
+      "section": "Noise floor and sources of variation",
+      "id": "var.within_week",
+      "value": 0.2354126452002848,
+      "display": "24%",
+      "label": "share of variance: Within-week scatter (noise floor) (SD 0.28 mg/L)",
+      "source": "reports/figures/fig8_variance_breakdown.csv"
+    },
+    {
+      "section": "Noise floor and sources of variation",
+      "id": "var.total_sd",
+      "value": 0.5686508121921053,
+      "display": "0.57 mg/L",
+      "label": "SD of all modeling samples",
+      "source": "data/processed/v1/chlorine_v1.parquet"
+    },
+    {
+      "section": "Plant outages",
+      "id": "outage.kubala_inferred",
+      "value": 7,
+      "display": "7",
+      "label": "Kubala outages inferred from gaps in plant sampling",
+      "source": "data/processed/v1/events.csv"
+    },
+    {
+      "section": "Plant outages",
+      "id": "outage.kubala_with_dip",
+      "value": 6,
+      "display": "6 of 7",
+      "label": "inferred Kubala outages that coincide with a city-wide dip (one also documented by a city notice)",
+      "source": "data/processed/v1/events.csv"
+    },
+    {
+      "section": "Plant outages",
+      "id": "outage.dip_range",
+      "value": [
+        0.321,
+        0.768
+      ],
+      "display": "0.3-0.8 mg/L",
+      "label": "city-wide drop in residual during those outages",
+      "source": "data/processed/v1/events.csv"
+    },
+    {
+      "section": "Plant outages",
+      "id": "outage.share_of_samples",
+      "value": 0.12572880362203184,
+      "display": "13%",
+      "label": "share of modeling samples taken while Kubala was offline",
+      "source": "data/processed/v1/chlorine_v1.parquet"
+    },
+    {
+      "section": "Plant outages",
+      "id": "outage.drop.upper",
+      "value": -0.7567422301525029,
+      "display": "-0.76 mg/L (49 places)",
+      "label": "mean change at sites in the Upper plane during outages (same calendar months)",
+      "source": "reports/figures/fig7_kubala_outages_by_plane.csv"
+    },
+    {
+      "section": "Plant outages",
+      "id": "outage.drop.lower",
+      "value": -0.576933433402288,
+      "display": "-0.58 mg/L (46 places)",
+      "label": "mean change at sites in the Lower plane during outages (same calendar months)",
+      "source": "reports/figures/fig7_kubala_outages_by_plane.csv"
+    },
+    {
+      "section": "Plant outages",
+      "id": "outage.drop.west",
+      "value": -0.6169374527426775,
+      "display": "-0.62 mg/L (5 places)",
+      "label": "mean change at sites in the West plane during outages (same calendar months)",
+      "source": "reports/figures/fig7_kubala_outages_by_plane.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.known_site.B0",
+      "value": 0.4553424916250114,
+      "display": "0.455 [0.430-0.484]",
+      "label": "RMSE mg/L [95% CI], B0, known site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.known_site.B1",
+      "value": 0.3940586985268054,
+      "display": "0.394 [0.366-0.427]",
+      "label": "RMSE mg/L [95% CI], B1, known site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.known_site.B4",
+      "value": 0.3117927328202637,
+      "display": "0.312 [0.286-0.336]",
+      "label": "RMSE mg/L [95% CI], B4, known site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.known_site.B4p",
+      "value": 0.3194591118070021,
+      "display": "0.319 [0.294-0.347]",
+      "label": "RMSE mg/L [95% CI], B4p, known site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.known_site.B5",
+      "value": 0.304217954278586,
+      "display": "0.304 [0.282-0.325]",
+      "label": "RMSE mg/L [95% CI], B5, known site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.known_site.B5p",
+      "value": 0.3081081108592902,
+      "display": "0.308 [0.286-0.330]",
+      "label": "RMSE mg/L [95% CI], B5p, known site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.unseen_site.B0",
+      "value": 0.455819084130602,
+      "display": "0.456 [0.430-0.485]",
+      "label": "RMSE mg/L [95% CI], B0, unseen site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.unseen_site.B1",
+      "value": 0.3932112471517676,
+      "display": "0.393 [0.365-0.426]",
+      "label": "RMSE mg/L [95% CI], B1, unseen site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.unseen_site.B4",
+      "value": 0.3158025220914885,
+      "display": "0.316 [0.290-0.340]",
+      "label": "RMSE mg/L [95% CI], B4, unseen site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.unseen_site.B4p",
+      "value": 0.3246532451945229,
+      "display": "0.325 [0.299-0.351]",
+      "label": "RMSE mg/L [95% CI], B4p, unseen site, validation 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.known_site.B0",
+      "value": 0.4871434853743867,
+      "display": "0.487 [0.469-0.507]",
+      "label": "RMSE mg/L [95% CI], B0, known site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.known_site.B1",
+      "value": 0.3965688417379127,
+      "display": "0.397 [0.381-0.416]",
+      "label": "RMSE mg/L [95% CI], B1, known site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.known_site.B4",
+      "value": 0.3621911743784414,
+      "display": "0.362 [0.343-0.382]",
+      "label": "RMSE mg/L [95% CI], B4, known site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.known_site.B4p",
+      "value": 0.3525759729002428,
+      "display": "0.353 [0.336-0.372]",
+      "label": "RMSE mg/L [95% CI], B4p, known site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.known_site.B5",
+      "value": 0.3521647513065419,
+      "display": "0.352 [0.333-0.370]",
+      "label": "RMSE mg/L [95% CI], B5, known site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.known_site.B5p",
+      "value": 0.3425989580510591,
+      "display": "0.343 [0.328-0.359]",
+      "label": "RMSE mg/L [95% CI], B5p, known site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.unseen_site.B0",
+      "value": 0.4874665967761455,
+      "display": "0.487 [0.469-0.507]",
+      "label": "RMSE mg/L [95% CI], B0, unseen site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.unseen_site.B1",
+      "value": 0.3961859519508016,
+      "display": "0.396 [0.380-0.416]",
+      "label": "RMSE mg/L [95% CI], B1, unseen site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.unseen_site.B4",
+      "value": 0.3679053585783539,
+      "display": "0.368 [0.348-0.388]",
+      "label": "RMSE mg/L [95% CI], B4, unseen site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.test.unseen_site.B4p",
+      "value": 0.3575912128859612,
+      "display": "0.358 [0.341-0.377]",
+      "label": "RMSE mg/L [95% CI], B4p, unseen site, test 2024-26",
+      "source": "data/eval/test/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.gain_neighbors",
+      "value": 0.33189201562783455,
+      "display": "33%",
+      "label": "error cut from overall mean (B0) to best neighbor baseline (B5), known sites 2023",
+      "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.learning_curve.B4",
+      "value": [
+        0.36424239930545455,
+        0.3158025220914885
+      ],
+      "display": "0.364 with 36 sites -> 0.316 with 143",
+      "label": "unseen-site RMSE of B4 as more places are monitored (validation 2023)",
+      "source": "data/eval/val/learning_curve.csv"
+    },
+    {
+      "section": "Baselines (Step 2)",
+      "id": "base.val.coverage_range",
+      "value": [
+        0.84491587417703,
+        0.8910021945866862
+      ],
+      "display": "84%-89%",
+      "label": "80%-interval coverage of the neighbor baselines in calm 2023 (too wide)",
+      "source": "data/eval/val/results.csv"
+    }
+  ],
+  "checks": [
+    {
+      "check": "funnel ends at the modeling table",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "modeling samples = table rows - non-detects",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "funnel place count = analysis place count",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "all cleaning checks PASS or WARN, none FAIL",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "variance shares sum to 1",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "fig8 noise floor = evaluation noise floor",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

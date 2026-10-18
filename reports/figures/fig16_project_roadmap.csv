@@ -1,0 +1,11 @@
+step,detail,status
+1  Data,"Lab export (58,492 rows) + public city GIS",completed
+2  Cleaning,"Scope, locations, duplicates, privacy",completed
+3  Features,"Pressure plane, plant distance, hydrants",completed
+4  Plant status,Outages inferred from sampling gaps,completed
+5  Exploration,"Outages, sources of variation, noise floor",completed
+6  Fair testing,"Time split, hidden places, leakage tests",completed
+7  Baselines,Neighbor-averaging ladder + results,completed
+8  Main model,Regression kriging (exploring),proposed
+9  Uncertainty,Calibrated confidence ranges,proposed
+10  Final evaluation,"Held-out and new data; report, deliverables",proposed

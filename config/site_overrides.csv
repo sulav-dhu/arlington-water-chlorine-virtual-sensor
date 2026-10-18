@@ -1,0 +1,5 @@
+site_code,target_location_id,reason
+W042,PLANT-PB-LAB,Only sample has alias 'PB Lab'
+W052,PLANT-PB-LAB,"Aliases '1901-B Lakewood DR' (the Pierce-Burch plant address), 'PB lab faucet', 'lab': a plant lab tap, not a network site"
+N034,TANK-HARWELL,Only sample has alias 'Harwell EST'
+SW031,TANK-TIERRA-VERDE,Both samples have alias 'Tierra Verde EST'

@@ -1,0 +1,8 @@
+step,rows,removed_because
+All rows in the lab export (20 tests),58492,
+Total-chlorine results,37250,"other tests (pH, ammonia, nitrite, ...)"
+In routine sampling programs,30836,"construction, special projects, NAP, plant and tank programs"
+At distribution sampling sites,30753,"plant taps, ad-hoc addresses"
+Location confirmed,30722,site code and address disagree
+Reportable result,30717,"'Not Analyzed', 'Invalid', 'Lab Error'"
+One copy per sample,30703,same sample logged twice

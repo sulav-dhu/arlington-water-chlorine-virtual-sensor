@@ -1,0 +1,19 @@
+location_id,location_type,facility,point_type,name_pattern,est_code,address,notes
+PLANT-JK-FINISHED,plant,JK,finished,^(JKTAP|EP002|EP002/JKTAP|JKTAP/EP002)$,,7001 US HWY 287,Kubala finished water; entry point EP002
+PLANT-JK-RAW,plant,JK,raw,^JKRAW$,,7001 US HWY 287,Kubala raw water
+PLANT-JK-OTHER,plant,JK,process,^JK,,7001 US HWY 287,"Kubala in-plant points (clearwells, filters, RO pilot, ...)"
+PLANT-PB-FINISHED,plant,PB,finished,^(PBTAP|EP001|EP001/PBTAP|PBTAP/EP001)$,,1901 LAKEWOOD DR,Pierce-Burch finished water; entry point EP001
+PLANT-PB-SOUTH-FINISHED,plant,PB,finished,^PBSOUTHTAP$,,1901 LAKEWOOD DR,Pierce-Burch south plant tap (sampled 2015-2019)
+PLANT-PB-RAW,plant,PB,raw,^(PBRAW|PBSOUTHRAW|PBPUMPHOUSE|PBRAWPUMPHOUSE|PBPUMPHOUSERAW|PBPHRAW|PBRAWPH)$,,1901 LAKEWOOD DR,Pierce-Burch raw water / pump house
+PLANT-PB-LAB,plant,PB,lab_tap,^PBLAB$,,1901 LAKEWOOD DR,Pierce-Burch lab faucet (also miscoded as W042 and W052)
+PLANT-PB-OTHER,plant,PB,process,^PB,,1901 LAKEWOOD DR,Pierce-Burch in-plant points
+TANK-HARWELL,tank,Harwell EST,elevated,^HARWELL,EST001,,
+TANK-NORTHWEST,tank,Northwest EST,elevated,^NORTHWEST,EST002,,
+TANK-COLLINS,tank,Collins EST,elevated,^COLLINS,,,No EST code; last sampled 2025-05
+TANK-GRACE-HOWELL,tank,Grace Howell EST,elevated,^GRACEHOWELL,EST004,,
+TANK-SOUTHEAST,tank,Southeast EST,elevated,^(SOUTHEAST|SE(?=TOWER|TANK)),EST005,,
+TANK-ARKANSAS,tank,Arkansas EST,elevated,^ARKANSAS,EST006,,
+TANK-GOLDEN-WEST,tank,Golden West EST,elevated,^GOLDENWEST,EST007,,
+TANK-SOUTHWEST,tank,Southwest EST,elevated,^SOUTHWEST,EST008,,
+TANK-MATLOCK,tank,Matlock EST,elevated,^MATLOCK,EST009,,
+TANK-TIERRA-VERDE,tank,Tierra Verde EST,elevated,^TIERR[AE]VERD[AE],EST010,,

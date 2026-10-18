@@ -1,0 +1,16 @@
+# Data is never committed.
+# - The raw lab export contains customer names and phone numbers.
+# - Processed outputs contain sampling-site addresses and coordinates.
+*.xlsx
+data/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# OS and Office lock files
+.DS_Store
+~$*
