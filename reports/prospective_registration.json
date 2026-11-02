@@ -1,0 +1,123 @@
+{
+  "registered_at": "2026-10-13 02:35 UTC",
+  "cutoff": "2026-08-02",
+  "evaluation_rows": "in-scope routine total-chlorine samples (v1 cleaning rules) with sampled_at after the cutoff",
+  "data_version": "v1",
+  "raw_sha256": "7d2377bb6e9b363ea30134f0ab297ab820fc453edd25847dd7e075e0c2246460",
+  "training_rows": 30701,
+  "training_places": 208,
+  "code_fingerprints": {
+    "model": "aed1828ccc31bb38ff9f58ac36cbfc978b750a46d7601db82e589060fe153392",
+    "cleaning": "a87bd402970138c1e26054c90d33ddf95ce27e7ece88a5e116333a8ed329a6e2",
+    "runner": "155d113650010c37370b75644b45efdb96a79716617383b1c04fa2cf51eabb9f"
+  },
+  "models": {
+    "known_site": "E6 = average(B6 regression kriging with site effects, G6 gradient boosting)",
+    "unseen_site": "E7 = average(B7 regression kriging, G7 gradient boosting); no site history. G7 uses same-week same-region neighbor contrasts, which need the target's utility sampling-region code (removing them changes development RMSE by 0.000: modeling/sensitivity.py). Refit per fold with the frozen specification in the unseen-site protocol.",
+    "comparators": {
+      "known_site": "B5p",
+      "unseen_site": "B4p"
+    },
+    "other_references": [
+      "B1",
+      "B4",
+      "B5"
+    ],
+    "half_life_days": 365.0
+  },
+  "model_fingerprints": {
+    "E6": "5e0d331c310cb81f9f2af0c9b0adf54500f380d0ab20e5fb55ef4f76a3d740c3",
+    "E7": "bc54ce676ff4b12c7e04694a09402901af667ec7d3b1273d36f9c37e7dc52116"
+  },
+  "intervals": {
+    "known_site": {
+      "model": "E6",
+      "primary": "C0",
+      "secondary": "C2"
+    },
+    "unseen_site": {
+      "model": "E7",
+      "primary": "C2",
+      "secondary": "C0"
+    }
+  },
+  "calibration": {
+    "known_site": {
+      "model": "E6",
+      "pool_rows": 25385,
+      "pool_years": [
+        2017,
+        2026
+      ],
+      "z_quantiles": {
+        "normal": {
+          "q10": -0.9354219210959466,
+          "q90": 0.9316043855227524
+        },
+        "outage": {
+          "q10": -1.2677134890872268,
+          "q90": 1.150582624516848
+        }
+      },
+      "adaptive_levels_at_cutoff": {
+        "p_lo": 0.09783655243907759,
+        "p_hi": 0.92153970881373,
+        "gamma": 0.1
+      }
+    },
+    "unseen_site": {
+      "model": "E7",
+      "pool_rows": 25385,
+      "pool_years": [
+        2017,
+        2026
+      ],
+      "z_quantiles": {
+        "normal": {
+          "q10": -1.0094923902305155,
+          "q90": 0.935840524491059
+        },
+        "outage": {
+          "q10": -1.2669474037132618,
+          "q90": 1.0964785781118362
+        }
+      },
+      "adaptive_levels_at_cutoff": {
+        "p_lo": 0.1134311082717871,
+        "p_hi": 0.8964952982194144,
+        "gamma": 0.1
+      }
+    }
+  },
+  "calibration_pool_sha256": "88c1cfe72343bde05dabd17e2207cadf783263f8d875ed15c270a2bf214bfa09",
+  "metrics": [
+    "RMSE (95% cluster-bootstrap CI over places) and paired RMSE difference vs. the comparator",
+    "coverage, width and interval score of 80% intervals (C0 and C2)",
+    "AUC and recall for samples < 2.5 mg/L",
+    "subsets: Kubala-outage samples, new sites"
+  ],
+  "hypotheses": [
+    "H1 (known sites): E6 has lower RMSE than B5p, the strongest Step 2 reference on the most recent data (2024-26; a deliberately hard bar); supported if the 95% cluster-bootstrap CI of the RMSE difference lies below 0.",
+    "H2 (unseen sites): E7 has lower RMSE than B4p, likewise the strongest reference on 2024-26; same criterion.",
+    "H3 (calibration): the primary 80% intervals (known: C0, unseen: C2) cover between 75% and 85% of post-cutoff samples in each protocol.",
+    "H4 (outages, only if Kubala-outage samples exist after the cutoff): C2 coverage during outages is closer to 80% than C0 coverage."
+  ],
+  "when": "once, on the first export with at least 12 months of samples after the cutoff",
+  "command": "uv run python -m chlorine.modeling.prospective evaluate --raw NEW.xlsx --confirm",
+  "amendments": [
+    {
+      "at": "2026-10-13 02:36 UTC",
+      "change": "H1/H2 wording: the comparators B5p/B4p are the strongest references on 2024-26 (not the best on 2023 validation, which were B5/B4). Comparators, models, metrics and criteria unchanged; no post-cutoff data exists or was viewed."
+    },
+    {
+      "at": "2026-10-13 02:45 UTC",
+      "change": "(1) E7 description corrected: it uses no site history but is not strictly public-data-only (G7's same-region neighbor contrast needs the utility region code); a strict-public variant E7s is equivalent on development data (pooled 2017-2023 RMSE difference 0.000). (2) The model-code fingerprint now covers the import closure of the frozen models instead of whole folders, so unrelated new modules (modeling/sensitivity.py) do not invalidate it. Models are unchanged: a refit reproduces both registered model fingerprints. No post-cutoff data exists or was viewed.",
+      "previous_code_fingerprints": {
+        "model": "4c6ec78eafce587b6ae43505027c572c3f8bfe5a9904817657d3deb2303271b2",
+        "cleaning": "a87bd402970138c1e26054c90d33ddf95ce27e7ece88a5e116333a8ed329a6e2",
+        "runner": "1aceeb41d8256da2c546a04e6fd1def9c027f2baad9975be01f25bc984476f04"
+      }
+    }
+  ],
+  "code_fingerprint_definition": "model = import closure of modeling/prospective.py excluding cleaning/ (AST without docstrings)"
+}

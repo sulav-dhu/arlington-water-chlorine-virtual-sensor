@@ -4,10 +4,9 @@
     uv run python -m chlorine.reporting.numbers     # -> reports/key_numbers.md + reports/key_numbers.json
 
 Each number has a stable ID (e.g. `clean.samples`), a display string, the raw value and the file it came from.
-This version covers data cleaning, exploration and the baseline models.
 Slides and documents cite the display string of an ID, so text and figures cannot drift apart. Consistency
-checks assert that numbers available from two sources agree (e.g. the cleaning funnel ends exactly at the
-modeling table); the script fails if any check fails.
+checks assert that numbers available from two sources agree (e.g. the 2023 backtest year reproduces the
+Step 3 validation run exactly); the script fails if any check fails.
 """
 from __future__ import annotations
 
@@ -186,6 +185,170 @@ def build() -> Sheet:
           f"{pct(cov.coverage80.min())}-{pct(cov.coverage80.max())}",
           "80%-interval coverage of the neighbor baselines in calm 2023 (too wide)", val_p)
 
+    # -- Step 3 final models ------------------------------------------------------------------------------------
+    s.section = "Final models (Step 3: E6 known sites, E7 unseen sites)"
+    s3v_p, s3t_p = ev / "step3" / "val" / "results.csv", ev / "step3" / "test" / "results.csv"
+    s3v, s3t = _results(s3v_p), _results(s3t_p)
+    cmp_p = {"val": ev / "step3" / "val" / "comparisons.csv", "test": ev / "step3" / "test" / "comparisons.csv"}
+    for split, res, path in (("val", s3v, s3v_p), ("test", s3t, s3t_p)):
+        comp = pd.read_csv(cmp_p[split]).set_index(["protocol", "model"])
+        for protocol, code, headline in (("known_site", "E6", True), ("unseen_site", "E7", True), ("outage", "E6", True),
+                                         ("known_site", "B6", False), ("unseen_site", "B7", False),
+                                         ("known_site", "E7", False)):
+            if (protocol, "all", code) not in res.index:           # the outage protocol is validation-only
+                continue
+            r = res.loc[(protocol, "all", code)]
+            period = "pre-2024 Kubala outages, leave-one-out" if protocol == "outage" else (
+                "validation 2023" if split == "val" else "test 2024-26")
+            name = f"{period}, {protocol.replace('_', ' ')}"
+            s.add(f"final.{split}.{protocol}.{code}", r.rmse, mg(r.rmse), f"RMSE mg/L, {code}, {name}", path)
+            if headline and (protocol, code) in comp.index:
+                c = comp.loc[(protocol, code)]
+                ref = res.loc[(protocol, "all", c.comparator)].rmse
+                s.add(f"final.{split}.{protocol}.{code}_vs_{c.comparator}", r.rmse - ref,
+                      f"{r.rmse - ref:+.3f} {ci(c.d_rmse_lo, c.d_rmse_hi)}",
+                      f"RMSE difference {code} - {c.comparator} [95% cluster-bootstrap CI], {name}", cmp_p[split])
+                s.add(f"final.{split}.{protocol}.{code}_gain_vs_{c.comparator}", 1 - r.rmse / ref, pct(1 - r.rmse / ref),
+                      f"relative error cut {code} vs. {c.comparator}, {name}", path)
+            if code in ("E6", "E7"):
+                s.add(f"final.{split}.{protocol}.{code}_coverage80", r.coverage80, pct(r.coverage80),
+                      f"80%-interval coverage, {code}, {name} (original in-sample calibration)", path)
+                s.add(f"final.{split}.{protocol}.{code}_auc_lt25", r.auc_lt25, f"{r.auc_lt25:.2f}",
+                      f"AUC for flagging samples < 2.5 mg/L, {code}, {name}", path)
+                s.add(f"final.{split}.{protocol}.{code}_alarm_lt25", [r.recall_lt25, r.alarm_rate_lt25, r.n_lt25 / r.n],
+                      f"catches {pct(r.recall_lt25)} of samples < 2.5 while flagging {pct(r.alarm_rate_lt25)} "
+                      f"(base rate {pct(r.n_lt25 / r.n, 1)})",
+                      f"alarm rule 'lower 10% bound < 2.5 mg/L', {code}, {name}", path)
+    for subset, label in (("jk_offline", "during Kubala outages"), ("new_sites", "at places new since 2023")):
+        r, b = s3t.loc[("known_site", subset, "E6")], s3t.loc[("known_site", subset, "B5p")]
+        s.add(f"final.test.known_site.E6.{subset}", [r.rmse, b.rmse], f"{mg(r.rmse)} vs. B5p {mg(b.rmse)} (n={r.n:,.0f})",
+              f"test 2024-26 RMSE {label}, known sites", s3t_p)
+    cov = [s3t.loc[k].coverage80 for k in (("known_site", "all", "E6"), ("known_site", "all", "E7"),
+                                           ("unseen_site", "all", "E7"))]
+    s.add("final.test.coverage_range", [min(cov), max(cov)], f"{pct(min(cov))}-{pct(max(cov))}",
+          "80%-interval coverage on test 2024-26 of E6 and E7 in both protocols (original in-sample calibration): "
+          "too narrow, the problem addressed below", s3t_p)
+
+    # -- rolling backtest -------------------------------------------------------------------------------------------
+    s.section = "Rolling backtest 2017-2023 (development data only)"
+    bt_p = FIG / "fig10_backtest_by_year.csv"
+    bt = pd.read_csv(bt_p, dtype={"year": str})
+    yearly = bt[bt.year != "2017-2023"]
+    pooled = bt[bt.year == "2017-2023"].set_index(["protocol", "model"])
+    for protocol, final, base, krig in (("known_site", "E6", "B5p", "B6"), ("unseen_site", "E7", "B4p", "B7")):
+        piv = yearly[yearly.protocol == protocol].pivot(index="year", columns="model", values="rmse")
+        wins_b, wins_k = int((piv[final] < piv[base]).sum()), int((piv[final] < piv[krig]).sum())
+        s.add(f"backtest.{protocol}.{final}_beats_{base}_years", wins_b, f"{wins_b} of {len(piv)}",
+              f"years in which {final} has lower RMSE than {base}", bt_p)
+        s.add(f"backtest.{protocol}.{final}_beats_{krig}_years", wins_k, f"{wins_k} of {len(piv)}",
+              f"years in which {final} has lower RMSE than kriging alone ({krig})", bt_p)
+        for other in (base, krig):
+            r = pooled.loc[(protocol, other)]
+            s.add(f"backtest.{protocol}.{final}_minus_{other}", r.final_minus_this,
+                  f"{r.final_minus_this:+.3f} {ci(r.diff_lo, r.diff_hi)}",
+                  f"pooled 2017-2023 RMSE difference {final} - {other} [95% CI, places resampled]", bt_p)
+    dev = pd.concat([pd.read_parquet(ev / "backtest" / "dev.parquet"),
+                     pd.read_parquet(ev / "backtest" / "dev_members.parquet")], ignore_index=True)
+    from ..evaluation.metrics import bootstrap_rmse
+    for protocol, krig, base in (("known_site", "B6", "B5p"), ("unseen_site", "B7", "B4p")):
+        u = dev[dev.protocol == protocol]
+        b = bootstrap_rmse(u[u.model.isin([krig, base])], base, 1000, cfg.seed).set_index("model").loc[krig]
+        d = float(np.sqrt(np.mean((u[u.model == krig].pred - u[u.model == krig].y) ** 2))
+                  - np.sqrt(np.mean((u[u.model == base].pred - u[u.model == base].y) ** 2)))
+        s.add(f"backtest.{protocol}.{krig}_minus_{base}", d, f"{d:+.3f} {ci(b.d_rmse_lo, b.d_rmse_hi)}",
+              f"pooled 2017-2023: kriging alone ({krig}) minus the best baseline ({base}), {protocol.replace('_', ' ')}",
+              ev / "backtest" / "dev_members.parquet")
+    ps_p = ev / "backtest" / "dev_public_strict.parquet"
+    ps = pd.read_parquet(ps_p)
+    for protocol in ("unseen_site", "known_site"):
+        g = pd.concat([dev[(dev.protocol == protocol) & (dev.model == "E7")], ps[(ps.protocol == protocol) & (ps.model == "E7s")]])
+        b = bootstrap_rmse(g, "E7", 1000, cfg.seed).set_index("model").loc["E7s"]
+        d = float(np.sqrt(np.mean((g[g.model == "E7s"].pred - g[g.model == "E7s"].y) ** 2))
+                  - np.sqrt(np.mean((g[g.model == "E7"].pred - g[g.model == "E7"].y) ** 2)))
+        s.add(f"backtest.{protocol}.E7s_minus_E7", d, f"{d:+.3f} {ci(b.d_rmse_lo, b.d_rmse_hi)}",
+              f"pooled 2017-2023: strictly public E7s (no utility region code) minus E7, {protocol.replace('_', ' ')}",
+              ps_p)
+    # The 2023 and 2022 backtest years use exactly the Step 3 validation setups: they must reproduce them.
+    for protocol, code in (("known_site", "E6"), ("unseen_site", "E7"), ("known_site", "B6"), ("unseen_site", "B7")):
+        got = yearly[(yearly.protocol == protocol) & (yearly.model == code) & (yearly.year == "2023")].rmse.iloc[0]
+        s.check(f"backtest 2023 {code} {protocol} = Step 3 validation", abs(got - s3v.loc[(protocol, "all", code)].rmse) < 1e-9,
+                f"{got:.6f}")
+    second = pd.read_csv(ev / "step3" / "val" / "second_year.csv").set_index(["protocol", "model"])
+    for protocol, code in (("known_site", "E6"), ("unseen_site", "E7")):
+        got = yearly[(yearly.protocol == protocol) & (yearly.model == code) & (yearly.year == "2022")].rmse.iloc[0]
+        s.check(f"backtest 2022 {code} {protocol} = Step 3 second validation year",
+                abs(got - second.loc[(protocol, code)].rmse_2022) < 1e-9, f"{got:.6f}")
+    for protocol, code in (("known_site", "B5p"), ("unseen_site", "B4p")):
+        got = yearly[(yearly.protocol == protocol) & (yearly.model == code) & (yearly.year == "2023")].rmse.iloc[0]
+        s.check(f"backtest 2023 {code} {protocol} = Step 2 validation", abs(got - val.loc[(protocol, "all", code)].rmse) < 1e-9)
+
+    # -- prediction intervals ---------------------------------------------------------------------------------------
+    s.section = "Prediction intervals (rolling calibration study 2019-2023)"
+    st_p, sel_p = ev / "calibration" / "study.csv", ev / "calibration" / "selection.json"
+    st = pd.read_csv(st_p)
+    sel = json.loads(sel_p.read_text())
+    names = {"C0": "C0", "C1": "C1", "C2 (gamma=0.1)": "C2"}
+    for protocol in ("known_site", "unseen_site"):
+        for method, short in names.items():
+            g = st[(st.protocol == protocol) & (st.method == method)]
+            inband = int(g.coverage.between(0.75, 0.85).sum())
+            s.add(f"cal.{protocol}.{short}.coverage", g.coverage.mean(),
+                  f"{pct(g.coverage.mean(), 1)} (years {pct(g.coverage.min())}-{pct(g.coverage.max())}; "
+                  f"{inband} of {len(g)} in 75-85%)", f"80%-interval coverage, {short}, {protocol.replace('_', ' ')}", st_p)
+            s.add(f"cal.{protocol}.{short}.coverage_outage", g.coverage_outage.mean(), pct(g.coverage_outage.mean(), 1),
+                  f"mean coverage during Kubala outages (2019-2022), {short}, {protocol.replace('_', ' ')}", st_p)
+            s.add(f"cal.{protocol}.{short}.interval_score", g.interval_score.mean(), f"{g.interval_score.mean():.3f}",
+                  f"mean interval score (lower is better), {short}, {protocol.replace('_', ' ')}", st_p)
+        s.add(f"cal.{protocol}.selected", sel[protocol]["method"], names[sel[protocol]["method"]],
+              f"interval method chosen by the pre-declared rule, {protocol.replace('_', ' ')}", sel_p)
+    o = st[(st.year == 2020) & (st.protocol == "known_site")].set_index("method").coverage_outage
+    s.add("cal.known_site.outage_2020", [o["C0"], o["C2 (gamma=0.1)"]],
+          f"{pct(o['C0'])} -> {pct(o['C2 (gamma=0.1)'])}", "coverage during the 2020 Kubala outage, C0 -> C2 (known sites)",
+          st_p)
+    # Staleness test: one model trained through 2019 predicts 2020-2022 without retraining, vs. yearly retraining.
+    hz_p = ev / "backtest" / "horizon_2019_2022.parquet"
+    hz = pd.read_parquet(hz_p)
+    gaps = {}
+    for protocol, code in (("known_site", "E6"), ("unseen_site", "E7"), ("known_site", "E7")):
+        for y in (2020, 2021, 2022):
+            a_ = hz[(hz.protocol == protocol) & (hz.model == code) & (hz.sampled_at.dt.year == y)]
+            b_ = dev[(dev.protocol == protocol) & (dev.model == code) & (dev.year == y)]
+            cov_ = lambda g: float(((g.y >= g.q10) & (g.y <= g.q90)).mean())  # noqa: E731
+            gaps[(protocol, code, y)] = (cov_(b_) - cov_(a_), float(np.sqrt(np.mean((a_.pred - a_.y) ** 2))
+                                                                    - np.sqrt(np.mean((b_.pred - b_.y) ** 2))))
+    prim = [v for k, v in gaps.items() if k[:2] != ("known_site", "E7")]
+    s.add("cal.horizon_max_coverage_gap", max(abs(c) for c, _ in prim), f"{max(abs(c) for c, _ in prim):.3f}",
+          "largest coverage difference, yearly retraining vs. none, 1-3 years after training (E6 known, E7 unseen; "
+          f"E7 at known sites: {max(abs(gaps[('known_site', 'E7', y)][0]) for y in (2020, 2021, 2022)):.3f})",
+          [hz_p, ev / "backtest" / "dev.parquet"])
+    s.add("cal.horizon_max_rmse_gap", max(abs(r) for _, r in prim), f"{max(abs(r) for _, r in prim):.3f} mg/L",
+          "largest RMSE difference, no retraining vs. yearly retraining (E6 known, E7 unseen)",
+          [hz_p, ev / "backtest" / "dev.parquet"])
+    c0_2023 = st[(st.protocol == "known_site") & (st.method == "C0") & (st.year == 2023)].coverage.iloc[0]
+    s.check("C0 coverage 2023 (study) = Step 3 validation E6 coverage",
+            abs(c0_2023 - s3v.loc[("known_site", "all", "E6")].coverage80) < 1e-9)
+    s.check("fig9 CSV matches the calibration study",
+            np.allclose(pd.read_csv(FIG / "fig9_interval_calibration.csv").coverage.to_numpy(),
+                        st[st.method.isin(names)].coverage.to_numpy()))
+
+    # -- prospective test -------------------------------------------------------------------------------------------
+    s.section = "Prospective test (fresh test set)"
+    reg_p = REPORTS / "prospective_registration.json"
+    reg = json.loads(reg_p.read_text())
+    s.add("prosp.cutoff", reg["cutoff"], reg["cutoff"], "frozen models trained on all samples up to this date", reg_p)
+    s.add("prosp.training_rows", reg["training_rows"], f"{reg['training_rows']:,}", "training samples of the frozen models",
+          reg_p)
+    s.add("prosp.when", reg["when"], reg["when"], "when the single prospective evaluation runs", reg_p)
+    s.add("prosp.hypotheses", len(reg["hypotheses"]), f"{len(reg['hypotheses'])}", "pre-registered hypotheses (H1-H4)",
+          reg_p)
+    s.add("prosp.fingerprints", reg["model_fingerprints"], ", ".join(f"{k} {v[:12]}" for k, v in
+                                                                     reg["model_fingerprints"].items()),
+          "fingerprints of the frozen models (first 12 hex digits)", reg_p)
+    log_p = ev / "test_access_log.jsonl"
+    log = [json.loads(line) for line in log_p.read_text().splitlines() if line.strip()]
+    s.add("prosp.test_uses", sum(e.get("split") == "test" for e in log), f"{sum(e.get('split') == 'test' for e in log)}",
+          "logged uses of the 2024-26 test period (Step 2, Step 3, prospective freeze)", log_p)
+    s.check("registration cutoff covers every modeling sample", reg["training_rows"] == len(df))
     return s
 
 

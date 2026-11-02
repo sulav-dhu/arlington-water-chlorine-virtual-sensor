@@ -1,0 +1,18 @@
+code,label,group,val_predictions,test_predictions
+B0,B0: training average,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B0c,B0c: average for the calendar month,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B0p,B0p: previous sample at the place,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B1,B1: other places this week,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B1c,B1c: other places in the prior 7 days,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B2,B2: B1 + utility region offset,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B2p,B2p: B1 + pressure plane offset,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B3,B3: B1 + site offset,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B4,B4: same-region places this week,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B4p,"B4p: same-plane places this week, closer count more",Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B4pc,B4pc: B4p using the prior 7 days,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B5,B5: B4 + site offset,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B5p,B5p: B4p + site offset,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+B5r,B5r: B3 + plant-outage site offsets,Baselines,data/eval/val/predictions.parquet,data/eval/test/predictions.parquet
+E6,E6: regression kriging + gradient boosting (monitored places),Main models,data/eval/step3/val/predictions.parquet,data/eval/step3/test/predictions.parquet
+E7,E7: regression kriging + gradient boosting (any place),Main models,data/eval/step3/val/predictions.parquet,data/eval/step3/test/predictions.parquet
+NEXT,Next model (not added yet),Better models,,

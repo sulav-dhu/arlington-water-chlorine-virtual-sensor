@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chlorine Results Map</title>
+<style>
+:root{color-scheme:light dark;--bg:#f4f3f0;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--ink3:#73726c;--line:#dddcd7;--road0:#e4e3de;--road1:#cfcec8;--road2:#b5b4ad;--mid:#c9c8c2;--accent:#2a78d6;--warn-bg:#fdf1d8;--warn-ink:#6b4a00;
+--s1:#86b6ef;--s2:#5598e7;--s3:#2a78d6;--s4:#1c5cab;--s5:#0d366b;--d1:#1c5cab;--d2:#86b6ef;--d4:#ee9a99;--d5:#d03b3b}
+@media (prefers-color-scheme:dark){:root{--bg:#121211;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--ink3:#9a998f;--line:#383835;--road0:#2a2a28;--road1:#42423e;--road2:#55554f;--mid:#77766f;--accent:#3987e5;--warn-bg:#3a2d10;--warn-ink:#f2d48a;
+--s1:#184f95;--s2:#256abf;--s3:#3987e5;--s4:#6da7ec;--s5:#b7d3f6;--d1:#3987e5;--d2:#b7d3f6;--d4:#f4bcbb;--d5:#e34948}}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;flex-direction:column}
+header{padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--line)}
+.top{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}h1{font-size:17px;margin:0}.private{color:var(--ink2);font-size:12.5px}
+.filters{display:flex;flex-wrap:wrap;gap:8px 12px;margin-top:8px;align-items:flex-end}
+label.f{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--ink2);min-width:0}
+select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 6px;max-width:310px}
+label.c{display:flex;gap:5px;align-items:center;font-size:12.5px;color:var(--ink2);padding-bottom:6px}
+#testNote{display:none;margin-top:8px;padding:6px 10px;border-radius:6px;background:var(--warn-bg);color:var(--warn-ink);font-size:12.5px}
+#note{color:var(--ink2);font-size:12.5px;margin-top:6px;min-height:1em}
+main{flex:1;display:flex;min-height:0}
+#mapWrap{position:relative;flex:1;min-width:0;background:var(--surface)}
+canvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}canvas.drag{cursor:grabbing}
+.zoom{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:4px}
+button{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;cursor:pointer;padding:4px 8px}
+button:hover{border-color:var(--ink3)}.zoom button{min-width:34px;min-height:34px}
+#legend{position:absolute;left:12px;bottom:12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px;max-width:290px}
+#legend b{display:block;font-weight:600;margin-bottom:4px}.k{display:flex;align-items:center;gap:6px;color:var(--ink2);line-height:1.5}.dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none}
+#tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:12px;display:none;box-shadow:0 2px 8px #0003;max-width:230px;z-index:2}
+aside{width:390px;flex:none;background:var(--bg);border-left:1px solid var(--line);overflow:auto;padding:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 9px}.stat b{display:block;font-size:18px;font-weight:600}.stat span{font-size:11.5px;color:var(--ink2)}
+h2{font-size:14px;margin:12px 0 6px}section{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:12px}
+.hint{font-size:12px;color:var(--ink2)}table{border-collapse:collapse;width:100%;font-size:12.5px}th,td{text-align:right;padding:3px 5px;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left}th{cursor:pointer;color:var(--ink2);font-weight:600;position:sticky;top:0;background:var(--surface)}th[aria-sort]{color:var(--ink)}
+tbody tr{cursor:pointer}tbody tr:hover,tr.sel{background:color-mix(in srgb,var(--accent) 14%,transparent)}.scroll{max-height:380px;overflow:auto}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.head h2{margin:0}.chart{width:100%;display:block;margin-top:8px}.chartLegend{display:flex;gap:12px;font-size:12px;color:var(--ink2);margin-top:4px}
+svg text{fill:var(--ink2);font-size:11px}
+@media (max-width:820px){main{flex-direction:column}#mapWrap{min-height:60vh}aside{width:auto;border-left:0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><h1>Chlorine results by sampling place</h1><span class="private">Results from the Arlington chlorine virtual-sensor project.</span></div>
+ <div class="filters">
+  <label class="f">Evaluation<select id="scenario"></select></label>
+  <label class="f">Model<select id="model"></select></label>
+  <label class="f">Compare against<select id="compare"></select></label>
+  <label class="f">Color places by<select id="color">
+    <option value="rmse">Typical miss (RMSE)</option><option value="bias">Bias (predicted minus measured)</option><option value="actual">Average measured chlorine</option><option value="pred">Average predicted chlorine</option></select></label>
+  <label class="f">Weeks<select id="weeks"><option value="all">All weeks</option><option value="on">Kubala running</option><option value="off">Kubala offline</option></select></label>
+  <label class="f">Pressure plane<select id="plane"></select></label>
+  <label class="f">Places<select id="newp"><option value="all">All places</option><option value="new">New since 2023</option></select></label>
+  <label class="f">Dim places under<select id="minN"><option>1</option><option selected>5</option><option>10</option><option>20</option></select></label>
+  <label class="c"><input type="checkbox" id="hide"> Hide dimmed places</label>
+ </div>
+ <div id="testNote">Test period: for viewing results only. Do not use this view to choose models or settings; use the 2023 and outage views for that.</div>
+ <div id="note" role="status"></div>
+</header>
+<main>
+ <div id="mapWrap">
+  <canvas id="map" aria-label="Map of sampling places. The Places table beside it has the same values."></canvas>
+  <div class="zoom"><button id="zi" aria-label="Zoom in">+</button><button id="zo" aria-label="Zoom out">−</button><button id="zr" aria-label="Reset view">⟲</button></div>
+  <div id="legend"></div><div id="tip"></div>
+ </div>
+ <aside>
+  <div class="stats" id="stats"></div>
+  <section id="detail" hidden></section>
+  <section><h2 style="margin-top:0">Places</h2><div class="hint" id="tableHint"></div><div class="scroll"><table id="tbl"><thead></thead><tbody></tbody></table></div></section>
+  <section><h2 style="margin-top:0">All models in this view</h2><div class="scroll"><table id="ladder"><thead><tr><th>Model</th><th>RMSE</th><th>Bias</th><th>80% range hit</th></tr></thead><tbody></tbody></table></div></section>
+ </aside>
+</main>
+<script id="data" type="application/json">__MAP_DATA__</script>
+<script>
+const D=JSON.parse(document.getElementById('data').textContent),$=id=>document.getElementById(id);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const S={scenario:'val_known',model:'B5p',compare:'',color:'rmse',weeks:'all',plane:'all',newp:'all',minN:5,hide:false,sel:null,sort:'rmse',dir:-1};
+const fmt=(v,d=3)=>v==null||Number.isNaN(v)?'–':v.toFixed(d),sgn=v=>v==null||Number.isNaN(v)?'–':(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(3);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const scen=()=>D.scenarios.find(s=>s.id===S.scenario);
+
+function keep(sc,i){
+ if(S.weeks==='on'&&sc.jk[i])return false; if(S.weeks==='off'&&!sc.jk[i])return false;
+ if(S.newp==='new'&&!sc.new[i])return false;
+ if(S.plane!=='all'&&D.places[sc.place[i]].plane!==S.plane)return false;
+ return true;
+}
+function blank(){return{n:0,se:0,e:0,y:0,p:0,hit:0,hitn:0}}
+function add(a,y,p,lo,hi){a.n++;a.se+=(p-y)*(p-y);a.e+=p-y;a.y+=y;a.p+=p;if(lo!=null&&hi!=null){a.hitn++;if(y>=lo&&y<=hi)a.hit++}}
+function done(a){return a.n?{n:a.n,rmse:Math.sqrt(a.se/a.n)/1000,bias:a.e/a.n/1000,actual:a.y/a.n/1000,pred:a.p/a.n/1000,cover:a.hitn?a.hit/a.hitn:null}:null}
+function aggregate(code){
+ const sc=scen(),m=sc.preds[code],all=blank(),by=new Map(); if(!m)return null;
+ for(let i=0;i<sc.y.length;i++){ if(m.p[i]==null||!keep(sc,i))continue;
+  add(all,sc.y[i],m.p[i],m.lo[i],m.hi[i]); const k=sc.place[i]; if(!by.has(k))by.set(k,blank()); add(by.get(k),sc.y[i],m.p[i],m.lo[i],m.hi[i]);}
+ const places=new Map();by.forEach((v,k)=>places.set(k,done(v)));return{all:done(all),places};
+}
+const BINS={rmse:{edges:[.2,.3,.4,.5],title:'Typical miss at the place (RMSE, mg/L)',labels:['under 0.20','0.20 to 0.30','0.30 to 0.40','0.40 to 0.50','0.50 or more'],vars:['--d1','--d2','--mid','--d4','--d5']},
+ actual:{edges:[2.5,3,3.5,4],title:'Average measured chlorine (mg/L)',labels:['under 2.5','2.5 to 3.0','3.0 to 3.5','3.5 to 4.0','4.0 or more'],vars:['--s1','--s2','--s3','--s4','--s5']},
+ pred:{edges:[2.5,3,3.5,4],title:'Average predicted chlorine (mg/L)',labels:['under 2.5','2.5 to 3.0','3.0 to 3.5','3.5 to 4.0','4.0 or more'],vars:['--s1','--s2','--s3','--s4','--s5']},
+ bias:{edges:[-.2,-.05,.05,.2],title:'Bias: predicted minus measured (mg/L)',labels:['predicts low by over 0.20','low by 0.05 to 0.20','within 0.05','high by 0.05 to 0.20','predicts high by over 0.20'],vars:['--d1','--d2','--mid','--d4','--d5']},
+ diff:{edges:[-.05,-.01,.01,.05],title:'',labels:[],vars:['--d1','--d2','--mid','--d4','--d5']}};
+function binOf(key,v){const e=BINS[key].edges;let i=0;while(i<e.length&&v>=e[i])i++;return i}
+let view={a:null,b:null,rows:[],none:[]};
+function compute(){
+ const a=aggregate(S.model),b=S.compare?aggregate(S.compare):null,rows=[];
+ D.places.forEach((p,i)=>{const r=a&&a.places.get(i);if(!r)return;if(S.hide&&r.n<S.minN)return;
+  const o=b&&b.places.get(i);rows.push({i,p,...r,cmp:o?o.rmse:null,diff:o?r.rmse-o.rmse:null});});
+ const has=new Set(rows.map(r=>r.i));
+ const none=D.places.filter((p,i)=>!has.has(i)&&p.lon!=null&&(S.plane==='all'||p.plane===S.plane)&&!(a&&a.places.has(i)));
+ view={a,b,rows,none};
+}
+function colorKey(){return S.compare?'diff':S.color}
+function valueOf(r){const k=colorKey();return k==='diff'?r.diff:r[k]}
+
+/* map */
+const cv=$('map'),ctx=cv.getContext('2d'),wrap=$('mapWrap');let W=0,H=0,DPR=1,T={k:1,x:0,y:0};
+const placed=D.places.filter(p=>p.lon!=null),mid=placed.reduce((s,p)=>s+p.lat,0)/placed.length,cosL=Math.cos(mid*Math.PI/180);
+const px=l=>l*cosL,py=l=>-l;
+const bb={x0:Math.min(...placed.map(p=>px(p.lon))),x1:Math.max(...placed.map(p=>px(p.lon))),y0:Math.min(...placed.map(p=>py(p.lat))),y1:Math.max(...placed.map(p=>py(p.lat)))};
+function reset(){const m=48,k=Math.min((W-2*m)/(bb.x1-bb.x0),(H-2*m)/(bb.y1-bb.y0));T={k,x:(W-k*(bb.x0+bb.x1))/2,y:(H-k*(bb.y0+bb.y1))/2};draw()}
+const sx=lon=>px(lon)*T.k+T.x,sy=lat=>py(lat)*T.k+T.y;
+function resize(){const r=wrap.getBoundingClientRect();W=r.width;H=r.height;DPR=devicePixelRatio||1;cv.width=W*DPR;cv.height=H*DPR;if(!T.init){T.init=1;reset()}else draw()}
+const roads=[[],[],[]];D.roads.forEach(f=>{const pts=[];let x=f[1],y=f[2];pts.push(px(x/1e4),py(y/1e4));for(let i=3;i<f.length;i+=2){x+=f[i];y+=f[i+1];pts.push(px(x/1e4),py(y/1e4))}roads[f[0]].push(pts)});
+let raf=0;function draw(){if(!raf)raf=requestAnimationFrame(paint)}
+function paint(){raf=0;ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,W,H);ctx.lineCap='round';
+ [['--road0',.6],['--road1',1],['--road2',1.6]].forEach(([c,w],lvl)=>{ctx.strokeStyle=css(c);ctx.lineWidth=w;ctx.beginPath();for(const a of roads[lvl]){ctx.moveTo(a[0]*T.k+T.x,a[1]*T.k+T.y);for(let i=2;i<a.length;i+=2)ctx.lineTo(a[i]*T.k+T.x,a[i+1]*T.k+T.y)}ctx.stroke()});
+ const surf=css('--surface'),ink=css('--ink');ctx.font='600 12px system-ui,sans-serif';
+ ctx.fillStyle=css('--ink3');for(const p of view.none){ctx.beginPath();ctx.arc(sx(p.lon),sy(p.lat),2.5,0,7);ctx.fill()}
+ const key=colorKey(),vars=BINS[key].vars.map(css),rows=[...view.rows].sort((a,b)=>a.n-b.n);
+ for(const r of rows){ if(r.p.lon==null)continue;const v=valueOf(r);const x=sx(r.p.lon),y=sy(r.p.lat),dim=r.n<S.minN;
+  ctx.beginPath();ctx.arc(x,y,6,0,7);
+  if(v==null){ctx.fillStyle=surf;ctx.strokeStyle=css('--ink3');ctx.lineWidth=1.5;ctx.fill();ctx.stroke();continue}
+  const c=vars[binOf(key,v)];
+  if(dim){ctx.fillStyle=surf;ctx.fill();ctx.strokeStyle=c;ctx.lineWidth=2;ctx.setLineDash([2,2]);ctx.stroke();ctx.setLineDash([])}
+  else{ctx.fillStyle=c;ctx.fill();ctx.strokeStyle=surf;ctx.lineWidth=2;ctx.stroke()}
+ }
+ D.plants.forEach(p=>{const x=sx(p.lon),y=sy(p.lat);ctx.fillStyle=ink;ctx.strokeStyle=surf;ctx.lineWidth=2;ctx.beginPath();ctx.rect(x-6,y-6,12,12);ctx.fill();ctx.stroke();ctx.lineWidth=3;ctx.strokeText(p.name,x+10,y+4);ctx.fillText(p.name,x+10,y+4)});
+ const sel=rows.find(r=>r.i===S.sel);if(sel&&sel.p.lon!=null){ctx.beginPath();ctx.arc(sx(sel.p.lon),sy(sel.p.lat),10,0,7);ctx.strokeStyle=ink;ctx.lineWidth=2.5;ctx.stroke()}
+}
+function hit(e){const b=cv.getBoundingClientRect(),mx=e.clientX-b.left,my=e.clientY-b.top;let best=null,bd=14*14;for(const r of view.rows){if(r.p.lon==null)continue;const d=(sx(r.p.lon)-mx)**2+(sy(r.p.lat)-my)**2;if(d<bd){bd=d;best=r}}return{best,mx,my}}
+let drag=null,moved=false;
+cv.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};moved=false;cv.setPointerCapture(e.pointerId);cv.classList.add('drag')});
+cv.addEventListener('pointermove',e=>{if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>2)moved=true;T.x+=dx;T.y+=dy;drag={x:e.clientX,y:e.clientY};$('tip').style.display='none';draw();return}
+ const {best,mx,my}=hit(e),t=$('tip');if(!best){const g=view.none.find(p=>(sx(p.lon)-mx)**2+(sy(p.lat)-my)**2<64);if(!g){t.style.display='none';return}
+  t.innerHTML=`<b>${esc(g.id)}</b><br>No results in this view (${g.total} sample${g.total===1?'':'s'} overall)`;t.style.display='block';t.style.left=Math.min(mx+14,W-240)+'px';t.style.top=Math.max(my-10,4)+'px';return}
+ t.innerHTML=`<b>${esc(best.p.id)}</b>, ${best.n} sample${best.n===1?'':'s'}${best.n<S.minN?' (few, read with care)':''}<br>RMSE ${fmt(best.rmse)} mg/L, bias ${sgn(best.bias)}<br>Measured ${fmt(best.actual,2)}, predicted ${fmt(best.pred,2)}${best.cmp!=null?`<br>${esc(S.compare)} RMSE ${fmt(best.cmp)}, change ${sgn(best.diff)}`:''}`;
+ t.style.display='block';t.style.left=Math.min(mx+14,W-240)+'px';t.style.top=Math.max(my-10,4)+'px'});
+cv.addEventListener('pointerup',e=>{const wasDrag=moved;drag=null;cv.classList.remove('drag');if(!wasDrag){const {best}=hit(e);select(best?best.i:null)}});
+cv.addEventListener('pointerleave',()=>{$('tip').style.display='none'});
+function zoom(f,cx=W/2,cy=H/2){T.x=cx-(cx-T.x)*f;T.y=cy-(cy-T.y)*f;T.k*=f;draw()}
+cv.addEventListener('wheel',e=>{e.preventDefault();const b=cv.getBoundingClientRect();zoom(Math.exp(-e.deltaY*.0015),e.clientX-b.left,e.clientY-b.top)},{passive:false});
+$('zi').onclick=()=>zoom(1.5);$('zo').onclick=()=>zoom(1/1.5);$('zr').onclick=reset;
+
+/* panels */
+function legend(){const key=colorKey();let title=BINS[key].title,labels=BINS[key].labels;
+ if(key==='diff'){title=`RMSE change: ${S.model} vs ${S.compare} (mg/L)`;labels=[`${S.model} better by over 0.05`,`${S.model} better by 0.01 to 0.05`,'within 0.01',`${S.model} worse by 0.01 to 0.05`,`${S.model} worse by over 0.05`]}
+ $('legend').innerHTML=`<b>${esc(title)}</b>`+labels.map((l,i)=>`<div class="k"><span class="dot" style="background:var(${BINS[key].vars[i]})"></span>${esc(l)}</div>`).join('')+
+ `<div class="k"><span class="dot" style="border:2px dashed var(--ink3)"></span>under ${S.minN} samples, read with care</div><div class="k"><span class="dot" style="width:6px;height:6px;margin:0 2.5px;background:var(--ink3)"></span>sampled, but no results in this view</div><div class="k"><span class="dot" style="border-radius:1px;background:var(--ink)"></span>treatment plant</div>`+(key==='rmse'?`<div class="k" style="margin-top:3px">Best possible for a weekly method: about ${D.noise_floor}</div>`:'');}
+function stats(){const a=view.a&&view.a.all,off=view.rows.filter(r=>r.p.lon==null).length;
+ $('stats').innerHTML=a?[[fmt(a.rmse),'RMSE, mg/L'],[sgn(a.bias),'Bias, mg/L'],[a.cover==null?'–':(a.cover*100).toFixed(0)+'%','in 80% range'],[a.n.toLocaleString(),'samples'],[view.a.places.size,'places'],[fmt(a.actual,2),'avg measured']].map(([v,l])=>`<div class="stat"><b>${v}</b><span>${l}</span></div>`).join(''):'<div class="hint">No samples match these filters.</div>';
+ $('tableHint').textContent=`Click a heading to sort, a row to select.${off?` ${off} place${off>1?'s':''} without map coordinates appear only here.`:''}`;}
+function table(){const cols=[['id','Place'],['n','n'],['rmse','RMSE'],['bias','Bias']].concat(S.compare?[['diff','Change']]:[['actual','Meas.']]);
+ $('tbl').tHead.innerHTML='<tr>'+cols.map(([k,l])=>`<th data-k="${k}"${S.sort===k?` aria-sort="${S.dir>0?'ascending':'descending'}"`:''}>${l}${S.sort===k?(S.dir>0?' ▲':' ▼'):''}</th>`).join('')+'</tr>';
+ const val=r=>S.sort==='id'?r.p.id:(r[S.sort]??-Infinity);
+ const rows=[...view.rows].sort((a,b)=>{const under=(a.n<S.minN)-(b.n<S.minN);if(under&&S.sort!=='n'&&S.sort!=='id')return under;const x=val(a),y=val(b);return (x>y?1:x<y?-1:0)*S.dir});
+ $('tbl').tBodies[0].innerHTML=rows.map(r=>`<tr data-i="${r.i}" class="${r.i===S.sel?'sel':''}"${r.n<S.minN?' style="opacity:.55"':''}><td>${esc(r.p.id)}</td><td>${r.n}</td><td>${fmt(r.rmse)}</td><td>${sgn(r.bias)}</td><td>${S.compare?sgn(r.diff):fmt(r.actual,2)}</td></tr>`).join('');}
+function ladder(){const sc=scen();$('ladder').tBodies[0].innerHTML=D.models.filter(m=>sc.preds[m.code]).map(m=>{const a=aggregate(m.code).all;return `<tr data-m="${m.code}" class="${m.code===S.model?'sel':''}"><td>${esc(m.code)}</td><td>${a?fmt(a.rmse):'–'}</td><td>${a?sgn(a.bias):'–'}</td><td>${a&&a.cover!=null?(a.cover*100).toFixed(0)+'%':'–'}</td></tr>`}).join('');}
+function detail(){const el=$('detail'),r=view.rows.find(x=>x.i===S.sel);if(S.sel==null||!r){el.hidden=true;return}
+ el.hidden=false;const sc=scen(),m=sc.preds[S.model],pts=[];for(let i=0;i<sc.y.length;i++)if(sc.place[i]===S.sel&&m.p[i]!=null&&keep(sc,i))pts.push({d:sc.day[i],y:sc.y[i]/1000,p:m.p[i]/1000,lo:m.lo[i]==null?null:m.lo[i]/1000,hi:m.hi[i]==null?null:m.hi[i]/1000});
+ const others=D.models.filter(x=>sc.preds[x.code]).map(x=>{const a=aggregate(x.code).places.get(S.sel);return a?{c:x.code,r:a.rmse}:null}).filter(Boolean).sort((a,b)=>a.r-b.r);
+ const rank=others.findIndex(o=>o.c===S.model)+1;
+ el.innerHTML=`<div class="head"><h2>Place ${esc(r.p.id)}</h2><button id="closeD" aria-label="Clear selection">Close</button></div>
+ <div class="hint">Site code${r.p.codes.length>1?'s':''}: ${esc(r.p.codes.join(', ')||'–')} · ${esc(r.p.plane||'unknown')} plane · region ${esc(r.p.region||'–')}</div>
+ <div class="stats" style="margin:8px 0 0"><div class="stat"><b>${fmt(r.rmse)}</b><span>RMSE, mg/L</span></div><div class="stat"><b>${sgn(r.bias)}</b><span>Bias, mg/L</span></div><div class="stat"><b>${r.n}</b><span>samples</span></div></div>
+ ${r.n<S.minN?'<div class="hint" style="margin-top:6px">Only a few samples here, so this error could be chance.</div>':''}
+ ${spark(pts)}
+ <div class="hint" style="margin-top:6px">${esc(S.model)} ranks ${rank} of ${others.length} models at this place. Lowest RMSE: ${esc(others[0].c)} (${fmt(others[0].r)}).</div>`;
+ $('closeD').onclick=()=>select(null);}
+function spark(p){if(!p.length)return'';const w=345,h=150,l=30,r=6,t=8,b=20,ds=p.map(x=>x.d),d0=Math.min(...ds),d1=Math.max(...ds),vals=p.flatMap(x=>[x.y,x.p,x.lo,x.hi]).filter(v=>v!=null),a=Math.floor(Math.min(...vals)*2)/2,z=Math.ceil(Math.max(...vals)*2)/2;
+ const X=d=>l+(d1>d0?(d-d0)/(d1-d0):.5)*(w-l-r),Y=v=>t+(z-v)/(z-a||1)*(h-t-b),ticks=[];for(let v=a;v<=z+1e-9;v+=z-a>2?1:.5)ticks.push(v);
+ const date=d=>new Date(d*864e5).toLocaleDateString('en-US',{month:'short',year:'numeric',timeZone:'UTC'});
+ const band=p[0].lo!=null?`<path d="M${p.map(x=>`${X(x.d)},${Y(x.hi)}`).join('L')}L${[...p].reverse().map(x=>`${X(x.d)},${Y(x.lo)}`).join('L')}Z" fill="var(--accent)" opacity=".16"/>`:'';
+ return `<svg class="chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Measured and predicted chlorine over time at this place">
+ ${ticks.map(v=>`<line x1="${l}" x2="${w-r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${l-5}" y="${Y(v)+4}" text-anchor="end">${v.toFixed(1)}</text>`).join('')}
+ ${band}${p.length>1?`<polyline points="${p.map(x=>`${X(x.d)},${Y(x.p)}`).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2"/>`:''}
+ ${p.map(x=>`<circle cx="${X(x.d)}" cy="${Y(x.y)}" r="${p.length>60?2.2:3.2}" fill="var(--ink)"><title>${date(x.d)}: measured ${x.y.toFixed(2)}, predicted ${x.p.toFixed(2)} mg/L</title></circle>`).join('')}
+ <text x="${l}" y="${h-5}">${date(d0)}</text><text x="${w-r}" y="${h-5}" text-anchor="end">${date(d1)}</text></svg>
+ <div class="chartLegend"><span>● Measured</span><span style="color:var(--accent)">━ ${esc(S.model)} predicted</span>${band?'<span>▒ 80% range</span>':''}<span>mg/L</span></div>`;}
+function select(i){S.sel=i;table();detail();ladder();draw();if(i!=null){const row=$('tbl').querySelector(`tr[data-i="${i}"]`);if(row){const b=row.closest('.scroll');b.scrollTop=row.offsetTop-b.clientHeight/2;$('detail').closest('aside').scrollTop=0}}}
+$('tbl').addEventListener('click',e=>{const th=e.target.closest('th');if(th){const k=th.dataset.k;if(S.sort===k)S.dir*=-1;else{S.sort=k;S.dir=k==='id'?1:-1}table();return}const tr=e.target.closest('tr[data-i]');if(tr)select(+tr.dataset.i)});
+$('ladder').addEventListener('click',e=>{const tr=e.target.closest('tr[data-m]');if(tr){S.model=tr.dataset.m;syncModels();refresh()}});
+
+/* controls */
+function modelOptions(sel,allowNone){const sc=scen(),groups=[...new Set(D.models.map(m=>m.group))];
+ sel.innerHTML=(allowNone?'<option value="">No comparison</option>':'')+groups.map(g=>`<optgroup label="${esc(g)}">`+D.models.filter(m=>m.group===g&&(!allowNone||m.ready)).map(m=>`<option value="${esc(m.code)}"${sc.preds[m.code]?'':' disabled'}>${esc(m.label)}${m.ready&&!sc.preds[m.code]?' (not available here)':''}</option>`).join('')+'</optgroup>').join('');}
+function syncModels(){const sc=scen();let note='';
+ modelOptions($('model'),false);modelOptions($('compare'),true);
+ if(!sc.preds[S.model]){const was=S.model,fb={B5p:'B4p',B5:'B4',B5r:'B1',B3:'B1',B0p:'B0'}[was];S.model=sc.preds[fb]?fb:Object.keys(sc.preds)[0];note=`${was} needs a place's own history, so it can't run at hidden places. Showing ${S.model}.`}
+ if(S.compare&&!sc.preds[S.compare]){S.compare='';note+=' Comparison cleared.'}
+ if(S.compare===S.model)S.compare='';
+ $('model').value=S.model;$('compare').value=S.compare;$('color').disabled=!!S.compare;$('note').textContent=note;
+ $('testNote').style.display=sc.is_test?'block':'none';}
+function refresh(){compute();legend();stats();table();ladder();detail();draw();
+ const a=view.a&&view.a.all;if(!a){$('note').textContent='No samples match these filters. For example, 2023 has no Kubala-offline samples.'}else if(!S.compare&&$('note').textContent.startsWith('No samples'))$('note').textContent=''}
+$('scenario').innerHTML=D.scenarios.map(s=>`<option value="${s.id}">${esc(s.label)}</option>`).join('');
+const planes=[...new Set(D.places.map(p=>p.plane).filter(Boolean))].sort();$('plane').innerHTML='<option value="all">All planes</option>'+planes.map(p=>`<option>${esc(p)}</option>`).join('');
+$('scenario').onchange=e=>{S.scenario=e.target.value;syncModels();refresh()};
+$('model').onchange=e=>{S.model=e.target.value;syncModels();refresh()};
+$('compare').onchange=e=>{S.compare=e.target.value;if(S.compare&&S.sort==='actual')S.sort='rmse';syncModels();refresh()};
+['color','weeks','plane','newp'].forEach(k=>$(k).onchange=e=>{S[k]=e.target.value;refresh()});
+$('minN').onchange=e=>{S.minN=+e.target.value;refresh()};$('hide').onchange=e=>{S.hide=e.target.checked;refresh()};
+addEventListener('resize',resize);matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+syncModels();compute();resize();refresh();
+window.__mapCheck=()=>Object.fromEntries(D.scenarios.map(s=>{const was=S.scenario;S.scenario=s.id;const o=Object.fromEntries(Object.keys(s.preds).map(c=>[c,aggregate(c).all.rmse]));S.scenario=was;return[s.id,o]}));
+</script>
+</body>
+</html>

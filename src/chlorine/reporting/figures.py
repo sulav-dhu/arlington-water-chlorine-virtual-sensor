@@ -5,6 +5,10 @@
 fig6  cleaning funnel: from the raw export to the modeling table, and what cleaning fixed
 fig7  Kubala outages: city-wide residual over time, and the drop at each site by pressure plane
 fig8  where the variation in chlorine comes from (variance decomposition, noise floor)
+fig9  prediction-interval calibration by year in the rolling backtest (needs backtest + calibration study)
+fig10 year-by-year backtest: final models vs. kriging alone vs. best baselines (needs both backtests)
+
+Proposal figures (data and baseline only, no main-model results):
 fig11 sampling coverage: places sampled per week and per year
 fig12 distribution of chlorine with the regulatory minimum, screening threshold and yearly-average maximum
 fig13 season vs. plant outages
@@ -235,6 +239,117 @@ def variance():
            f"at the near-daily sites ({floor['within_week_sd']:.2f} mg/L): no weekly model can remove it.")
     fig.savefig(OUT / "fig8_variance_breakdown.png", dpi=200)
     v.to_csv(OUT / "fig8_variance_breakdown.csv", index=False)
+    plt.close(fig)
+
+
+CAL_METHODS = [("C0", "C0  original (in-sample errors)"), ("C1", "C1  conformal (out-of-sample errors)"),
+               ("C2 (gamma=0.1)", "C2  adaptive conformal")]
+
+
+def calibration():
+    cfg = EvalConfig()
+    study = pd.read_csv(cfg.out_root / "calibration" / "study.csv")
+    chosen = json.loads((cfg.out_root / "calibration" / "selection.json").read_text())
+    t = study[study.method.isin([m for m, _ in CAL_METHODS])]
+    fig, axes = plt.subplots(2, 2, figsize=(11, 6.8), sharex=True)
+    fig.subplots_adjust(left=0.09, right=0.98, top=0.76, bottom=0.07, hspace=0.32, wspace=0.12)
+    rows = [("coverage", "all samples", (0.70, 0.90)), ("coverage_outage", "Kubala-outage samples", (0.60, 0.95))]
+    for i, (col, row_name, ylim) in enumerate(rows):
+        for j, (protocol, name) in enumerate([("known_site", "Known sites"), ("unseen_site", "Unseen sites")]):
+            ax = axes[i, j]
+            _style(ax, "y")
+            ax.axhspan(0.75, 0.85, color=BAND, alpha=0.12, linewidth=0, zorder=0)
+            ax.axhline(0.80, color=MUTED, linewidth=1, zorder=1)
+            for (method, label), color in zip(CAL_METHODS, SLOT):
+                d = t[(t.protocol == protocol) & (t.method == method)].dropna(subset=[col]).sort_values("year")
+                ax.plot(d.year, d[col], color=color, linewidth=1.6, zorder=2, label=label)
+                for r in d.itertuples():
+                    _dot(ax, r.year, getattr(r, col), color, size=6)
+            ax.set_ylim(*ylim)
+            ax.yaxis.set_major_formatter(matplotlib.ticker.PercentFormatter(1.0, decimals=0))
+            primary = chosen[protocol]["method"].split(" ")[0]
+            ax.set_title(f"{name}, {row_name}  (primary: {primary})", loc="left", fontsize=10,
+                         fontweight="bold", color=INK)
+            if j == 0:
+                ax.set_ylabel("Coverage of 80% interval")
+    axes[1, 0].set_xticks(range(2019, 2024))
+    axes[1, 0].set_xlim(2018.7, 2023.3)
+    for ax in axes[1]:
+        ax.text(2023.0, 0.80, "no outage\nin 2023", fontsize=8, color=MUTED, ha="center", va="center")
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper left", bbox_to_anchor=(0.085, 0.865), ncol=3, frameon=False, fontsize=9,
+               labelcolor=INK2)
+    band = lambda m: int((~t[t.method == m].coverage.between(0.75, 0.85)).sum())  # noqa: E731
+    years = int(t[t.method == "C0"].shape[0])
+    _title(fig, f"Adaptive intervals (C2) cover 75-85% in all {years} protocol-years; the original ones (C0) miss "
+                f"{band('C0')}",
+           "Rolling backtest 2019-2023, each year calibrated only on earlier years' out-of-sample errors. "
+           "Line: 80% target; band: 75-85%. Test period 2024-26 not used.")
+    fig.savefig(OUT / "fig9_interval_calibration.png", dpi=200)
+    t[["protocol", "model", "year", "method", "n", "coverage", "coverage_outage", "coverage_normal", "width",
+       "interval_score"]].to_csv(OUT / "fig9_interval_calibration.csv", index=False)
+    plt.close(fig)
+
+
+BACKTEST_SERIES = {"known_site": [("B5p", "Best baseline (B5p)"), ("B6", "Kriging alone (B6)"),
+                                  ("E6", "Final: kriging + boosting average (E6)")],
+                   "unseen_site": [("B4p", "Best baseline (B4p)"), ("B7", "Kriging alone (B7)"),
+                                   ("E7", "Final: kriging + boosting average (E7)")]}
+
+
+def backtest_numbers(reps: int = 1000, seed: int = 20261012) -> pd.DataFrame:
+    """RMSE by year and model, and the paired cluster-bootstrap difference of the final model vs. each other model
+    (clusters are places; the pooled row resamples each place's samples from all years together)."""
+    from ..evaluation.metrics import bootstrap_rmse
+    cfg = EvalConfig()
+    a = pd.concat([pd.read_parquet(cfg.out_root / "backtest" / "dev.parquet"),
+                   pd.read_parquet(cfg.out_root / "backtest" / "dev_members.parquet")], ignore_index=True)
+    rows = []
+    for protocol, series in BACKTEST_SERIES.items():
+        final = series[-1][0]
+        p = a[(a.protocol == protocol) & a.model.isin([c for c, _ in series])]
+        for year, g in list(p.groupby("year")) + [("2017-2023", p)]:
+            boot = bootstrap_rmse(g, final, reps, seed).set_index("model")
+            for code, _ in series:
+                m = g[g.model == code]
+                rmse = float(np.sqrt(np.mean((m.pred - m.y) ** 2)))
+                row = {"protocol": protocol, "year": str(year), "model": code, "n": len(m), "rmse": rmse,
+                       "rmse_lo": boot.loc[code, "rmse_lo"], "rmse_hi": boot.loc[code, "rmse_hi"]}
+                if code != final:      # final minus this model; negative = final better
+                    row.update(final_minus_this=float(np.sqrt(np.mean((g[g.model == final].pred - g[g.model == final].y) ** 2)))
+                               - rmse, diff_lo=-boot.loc[code, "d_rmse_hi"], diff_hi=-boot.loc[code, "d_rmse_lo"])
+                rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def backtest_by_year():
+    t = backtest_numbers()
+    yearly = t[t.year != "2017-2023"].assign(year=lambda d: d.year.astype(int))
+    fig, axes = plt.subplots(1, 2, figsize=(11, 5.0), sharey=True)
+    fig.subplots_adjust(left=0.08, right=0.98, top=0.72, bottom=0.11, wspace=0.08)
+    generic = ["Best baseline (known B5p, unseen B4p)", "Kriging alone (B6, B7)", "Final: average of kriging and boosting "
+               "(E6, E7)"]
+    for ax, (protocol, series), name in zip(axes, BACKTEST_SERIES.items(), ["Known sites", "Unseen sites (5-fold by place)"]):
+        _style(ax, "y")
+        for (code, _), color, label in zip(series, SLOT, generic):
+            d = yearly[(yearly.protocol == protocol) & (yearly.model == code)].sort_values("year")
+            ax.plot(d.year, d.rmse, color=color, linewidth=1.6, zorder=2, label=label)
+            for r in d.itertuples():
+                _dot(ax, r.year, r.rmse, color, size=6)
+        ax.set_title(name, loc="left", fontsize=10, fontweight="bold", color=INK)
+        ax.set_xticks(range(2017, 2024))
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper left", bbox_to_anchor=(0.075, 0.855), ncol=3, frameon=False, fontsize=9,
+               labelcolor=INK2)
+    axes[0].set_ylabel("RMSE (mg/L), lower is better")
+    axes[0].set_ylim(0.25, 0.48)
+    pooled = t[(t.year == "2017-2023") & t.final_minus_this.notna()].set_index(["protocol", "model"])
+    k, u = pooled.loc[("known_site", "B6")], pooled.loc[("unseen_site", "B7")]
+    _title(fig, "The final models have lower error than the best baselines in every development year, 2017-2023",
+           f"Each year predicted by models trained only on earlier years. Averaging beats kriging alone in 7 of 7 years "
+           f"(pooled: known {k.final_minus_this:+.3f}, unseen {u.final_minus_this:+.3f} mg/L, both 95% CIs below 0).")
+    fig.savefig(OUT / "fig10_backtest_by_year.png", dpi=200)
+    t.to_csv(OUT / "fig10_backtest_by_year.csv", index=False)
     plt.close(fig)
 
 
@@ -537,6 +652,8 @@ def main():
     funnel()
     outages()
     variance()
+    calibration()
+    backtest_by_year()
     proposal()
     print(f"-> {OUT}")
 

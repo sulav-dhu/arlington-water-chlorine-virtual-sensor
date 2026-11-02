@@ -80,6 +80,112 @@ Slides and documents quote the **Display** column; cite the ID in speaker notes.
 | `base.learning_curve.B4` | 0.364 with 36 sites -> 0.316 with 143 | unseen-site RMSE of B4 as more places are monitored (validation 2023) | `data/eval/val/learning_curve.csv` |
 | `base.val.coverage_range` | 84%-89% | 80%-interval coverage of the neighbor baselines in calm 2023 (too wide) | `data/eval/val/results.csv` |
 
+## Final models (Step 3: E6 known sites, E7 unseen sites)
+
+| ID | Display | What it is | Source |
+|---|---|---|---|
+| `final.val.known_site.E6` | 0.272 | RMSE mg/L, E6, validation 2023, known site | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.E6_vs_B5` | -0.032 [-0.045, -0.020] | RMSE difference E6 - B5 [95% cluster-bootstrap CI], validation 2023, known site | `data/eval/step3/val/comparisons.csv` |
+| `final.val.known_site.E6_gain_vs_B5` | 11% | relative error cut E6 vs. B5, validation 2023, known site | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.E6_coverage80` | 83% | 80%-interval coverage, E6, validation 2023, known site (original in-sample calibration) | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.E6_auc_lt25` | 0.96 | AUC for flagging samples < 2.5 mg/L, E6, validation 2023, known site | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.E6_alarm_lt25` | catches 63% of samples < 2.5 while flagging 3% (base rate 1.9%) | alarm rule 'lower 10% bound < 2.5 mg/L', E6, validation 2023, known site | `data/eval/step3/val/results.csv` |
+| `final.val.unseen_site.E7` | 0.308 | RMSE mg/L, E7, validation 2023, unseen site | `data/eval/step3/val/results.csv` |
+| `final.val.unseen_site.E7_vs_B4` | -0.008 [-0.024, +0.004] | RMSE difference E7 - B4 [95% cluster-bootstrap CI], validation 2023, unseen site | `data/eval/step3/val/comparisons.csv` |
+| `final.val.unseen_site.E7_gain_vs_B4` | 3% | relative error cut E7 vs. B4, validation 2023, unseen site | `data/eval/step3/val/results.csv` |
+| `final.val.unseen_site.E7_coverage80` | 83% | 80%-interval coverage, E7, validation 2023, unseen site (original in-sample calibration) | `data/eval/step3/val/results.csv` |
+| `final.val.unseen_site.E7_auc_lt25` | 0.93 | AUC for flagging samples < 2.5 mg/L, E7, validation 2023, unseen site | `data/eval/step3/val/results.csv` |
+| `final.val.unseen_site.E7_alarm_lt25` | catches 57% of samples < 2.5 while flagging 4% (base rate 1.9%) | alarm rule 'lower 10% bound < 2.5 mg/L', E7, validation 2023, unseen site | `data/eval/step3/val/results.csv` |
+| `final.val.outage.E6` | 0.356 | RMSE mg/L, E6, pre-2024 Kubala outages, leave-one-out, outage | `data/eval/step3/val/results.csv` |
+| `final.val.outage.E6_vs_B5p` | -0.049 [-0.068, -0.032] | RMSE difference E6 - B5p [95% cluster-bootstrap CI], pre-2024 Kubala outages, leave-one-out, outage | `data/eval/step3/val/comparisons.csv` |
+| `final.val.outage.E6_gain_vs_B5p` | 12% | relative error cut E6 vs. B5p, pre-2024 Kubala outages, leave-one-out, outage | `data/eval/step3/val/results.csv` |
+| `final.val.outage.E6_coverage80` | 75% | 80%-interval coverage, E6, pre-2024 Kubala outages, leave-one-out, outage (original in-sample calibration) | `data/eval/step3/val/results.csv` |
+| `final.val.outage.E6_auc_lt25` | 0.95 | AUC for flagging samples < 2.5 mg/L, E6, pre-2024 Kubala outages, leave-one-out, outage | `data/eval/step3/val/results.csv` |
+| `final.val.outage.E6_alarm_lt25` | catches 95% of samples < 2.5 while flagging 41% (base rate 23.5%) | alarm rule 'lower 10% bound < 2.5 mg/L', E6, pre-2024 Kubala outages, leave-one-out, outage | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.B6` | 0.277 | RMSE mg/L, B6, validation 2023, known site | `data/eval/step3/val/results.csv` |
+| `final.val.unseen_site.B7` | 0.315 | RMSE mg/L, B7, validation 2023, unseen site | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.E7` | 0.288 | RMSE mg/L, E7, validation 2023, known site | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.E7_coverage80` | 84% | 80%-interval coverage, E7, validation 2023, known site (original in-sample calibration) | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.E7_auc_lt25` | 0.95 | AUC for flagging samples < 2.5 mg/L, E7, validation 2023, known site | `data/eval/step3/val/results.csv` |
+| `final.val.known_site.E7_alarm_lt25` | catches 61% of samples < 2.5 while flagging 3% (base rate 1.9%) | alarm rule 'lower 10% bound < 2.5 mg/L', E7, validation 2023, known site | `data/eval/step3/val/results.csv` |
+| `final.test.known_site.E6` | 0.310 | RMSE mg/L, E6, test 2024-26, known site | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E6_vs_B5` | -0.042 [-0.055, -0.029] | RMSE difference E6 - B5 [95% cluster-bootstrap CI], test 2024-26, known site | `data/eval/step3/test/comparisons.csv` |
+| `final.test.known_site.E6_gain_vs_B5` | 12% | relative error cut E6 vs. B5, test 2024-26, known site | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E6_coverage80` | 75% | 80%-interval coverage, E6, test 2024-26, known site (original in-sample calibration) | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E6_auc_lt25` | 0.93 | AUC for flagging samples < 2.5 mg/L, E6, test 2024-26, known site | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E6_alarm_lt25` | catches 47% of samples < 2.5 while flagging 2% (base rate 1.8%) | alarm rule 'lower 10% bound < 2.5 mg/L', E6, test 2024-26, known site | `data/eval/step3/test/results.csv` |
+| `final.test.unseen_site.E7` | 0.352 | RMSE mg/L, E7, test 2024-26, unseen site | `data/eval/step3/test/results.csv` |
+| `final.test.unseen_site.E7_vs_B4` | -0.016 [-0.030, -0.001] | RMSE difference E7 - B4 [95% cluster-bootstrap CI], test 2024-26, unseen site | `data/eval/step3/test/comparisons.csv` |
+| `final.test.unseen_site.E7_gain_vs_B4` | 4% | relative error cut E7 vs. B4, test 2024-26, unseen site | `data/eval/step3/test/results.csv` |
+| `final.test.unseen_site.E7_coverage80` | 73% | 80%-interval coverage, E7, test 2024-26, unseen site (original in-sample calibration) | `data/eval/step3/test/results.csv` |
+| `final.test.unseen_site.E7_auc_lt25` | 0.88 | AUC for flagging samples < 2.5 mg/L, E7, test 2024-26, unseen site | `data/eval/step3/test/results.csv` |
+| `final.test.unseen_site.E7_alarm_lt25` | catches 37% of samples < 2.5 while flagging 3% (base rate 1.8%) | alarm rule 'lower 10% bound < 2.5 mg/L', E7, test 2024-26, unseen site | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.B6` | 0.318 | RMSE mg/L, B6, test 2024-26, known site | `data/eval/step3/test/results.csv` |
+| `final.test.unseen_site.B7` | 0.364 | RMSE mg/L, B7, test 2024-26, unseen site | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E7` | 0.332 | RMSE mg/L, E7, test 2024-26, known site | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E7_coverage80` | 76% | 80%-interval coverage, E7, test 2024-26, known site (original in-sample calibration) | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E7_auc_lt25` | 0.90 | AUC for flagging samples < 2.5 mg/L, E7, test 2024-26, known site | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E7_alarm_lt25` | catches 37% of samples < 2.5 while flagging 2% (base rate 1.8%) | alarm rule 'lower 10% bound < 2.5 mg/L', E7, test 2024-26, known site | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E6.jk_offline` | 0.363 vs. B5p 0.412 (n=658) | test 2024-26 RMSE during Kubala outages, known sites | `data/eval/step3/test/results.csv` |
+| `final.test.known_site.E6.new_sites` | 0.309 vs. B5p 0.365 (n=817) | test 2024-26 RMSE at places new since 2023, known sites | `data/eval/step3/test/results.csv` |
+| `final.test.coverage_range` | 73%-76% | 80%-interval coverage on test 2024-26 of E6 and E7 in both protocols (original in-sample calibration): too narrow, the problem addressed below | `data/eval/step3/test/results.csv` |
+
+## Rolling backtest 2017-2023 (development data only)
+
+| ID | Display | What it is | Source |
+|---|---|---|---|
+| `backtest.known_site.E6_beats_B5p_years` | 7 of 7 | years in which E6 has lower RMSE than B5p | `reports/figures/fig10_backtest_by_year.csv` |
+| `backtest.known_site.E6_beats_B6_years` | 7 of 7 | years in which E6 has lower RMSE than kriging alone (B6) | `reports/figures/fig10_backtest_by_year.csv` |
+| `backtest.known_site.E6_minus_B5p` | -0.040 [-0.048, -0.032] | pooled 2017-2023 RMSE difference E6 - B5p [95% CI, places resampled] | `reports/figures/fig10_backtest_by_year.csv` |
+| `backtest.known_site.E6_minus_B6` | -0.004 [-0.007, -0.001] | pooled 2017-2023 RMSE difference E6 - B6 [95% CI, places resampled] | `reports/figures/fig10_backtest_by_year.csv` |
+| `backtest.unseen_site.E7_beats_B4p_years` | 7 of 7 | years in which E7 has lower RMSE than B4p | `reports/figures/fig10_backtest_by_year.csv` |
+| `backtest.unseen_site.E7_beats_B7_years` | 7 of 7 | years in which E7 has lower RMSE than kriging alone (B7) | `reports/figures/fig10_backtest_by_year.csv` |
+| `backtest.unseen_site.E7_minus_B4p` | -0.019 [-0.031, -0.008] | pooled 2017-2023 RMSE difference E7 - B4p [95% CI, places resampled] | `reports/figures/fig10_backtest_by_year.csv` |
+| `backtest.unseen_site.E7_minus_B7` | -0.011 [-0.021, -0.004] | pooled 2017-2023 RMSE difference E7 - B7 [95% CI, places resampled] | `reports/figures/fig10_backtest_by_year.csv` |
+| `backtest.known_site.B6_minus_B5p` | -0.036 [-0.042, -0.029] | pooled 2017-2023: kriging alone (B6) minus the best baseline (B5p), known site | `data/eval/backtest/dev_members.parquet` |
+| `backtest.unseen_site.B7_minus_B4p` | -0.008 [-0.018, +0.002] | pooled 2017-2023: kriging alone (B7) minus the best baseline (B4p), unseen site | `data/eval/backtest/dev_members.parquet` |
+| `backtest.unseen_site.E7s_minus_E7` | -0.000 [-0.001, +0.001] | pooled 2017-2023: strictly public E7s (no utility region code) minus E7, unseen site | `data/eval/backtest/dev_public_strict.parquet` |
+| `backtest.known_site.E7s_minus_E7` | -0.000 [-0.001, +0.001] | pooled 2017-2023: strictly public E7s (no utility region code) minus E7, known site | `data/eval/backtest/dev_public_strict.parquet` |
+
+## Prediction intervals (rolling calibration study 2019-2023)
+
+| ID | Display | What it is | Source |
+|---|---|---|---|
+| `cal.known_site.C0.coverage` | 80.6% (years 77%-85%; 4 of 5 in 75-85%) | 80%-interval coverage, C0, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.C0.coverage_outage` | 77.4% | mean coverage during Kubala outages (2019-2022), C0, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.C0.interval_score` | 1.094 | mean interval score (lower is better), C0, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.C1.coverage` | 81.4% (years 78%-86%; 4 of 5 in 75-85%) | 80%-interval coverage, C1, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.C1.coverage_outage` | 81.9% | mean coverage during Kubala outages (2019-2022), C1, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.C1.interval_score` | 1.108 | mean interval score (lower is better), C1, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.C2.coverage` | 80.4% (years 78%-82%; 5 of 5 in 75-85%) | 80%-interval coverage, C2, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.C2.coverage_outage` | 83.5% | mean coverage during Kubala outages (2019-2022), C2, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.C2.interval_score` | 1.100 | mean interval score (lower is better), C2, known site | `data/eval/calibration/study.csv` |
+| `cal.known_site.selected` | C0 | interval method chosen by the pre-declared rule, known site | `data/eval/calibration/selection.json` |
+| `cal.unseen_site.C0.coverage` | 78.7% (years 74%-83%; 4 of 5 in 75-85%) | 80%-interval coverage, C0, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.C0.coverage_outage` | 74.5% | mean coverage during Kubala outages (2019-2022), C0, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.C0.interval_score` | 1.299 | mean interval score (lower is better), C0, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.C1.coverage` | 81.7% (years 77%-87%; 4 of 5 in 75-85%) | 80%-interval coverage, C1, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.C1.coverage_outage` | 82.4% | mean coverage during Kubala outages (2019-2022), C1, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.C1.interval_score` | 1.305 | mean interval score (lower is better), C1, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.C2.coverage` | 77.9% (years 75%-79%; 5 of 5 in 75-85%) | 80%-interval coverage, C2, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.C2.coverage_outage` | 81.8% | mean coverage during Kubala outages (2019-2022), C2, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.C2.interval_score` | 1.292 | mean interval score (lower is better), C2, unseen site | `data/eval/calibration/study.csv` |
+| `cal.unseen_site.selected` | C2 | interval method chosen by the pre-declared rule, unseen site | `data/eval/calibration/selection.json` |
+| `cal.known_site.outage_2020` | 64% -> 74% | coverage during the 2020 Kubala outage, C0 -> C2 (known sites) | `data/eval/calibration/study.csv` |
+| `cal.horizon_max_coverage_gap` | 0.023 | largest coverage difference, yearly retraining vs. none, 1-3 years after training (E6 known, E7 unseen; E7 at known sites: 0.033) | `data/eval/backtest/horizon_2019_2022.parquet, data/eval/backtest/dev.parquet` |
+| `cal.horizon_max_rmse_gap` | 0.004 mg/L | largest RMSE difference, no retraining vs. yearly retraining (E6 known, E7 unseen) | `data/eval/backtest/horizon_2019_2022.parquet, data/eval/backtest/dev.parquet` |
+
+## Prospective test (fresh test set)
+
+| ID | Display | What it is | Source |
+|---|---|---|---|
+| `prosp.cutoff` | 2026-08-02 | frozen models trained on all samples up to this date | `reports/prospective_registration.json` |
+| `prosp.training_rows` | 30,701 | training samples of the frozen models | `reports/prospective_registration.json` |
+| `prosp.when` | once, on the first export with at least 12 months of samples after the cutoff | when the single prospective evaluation runs | `reports/prospective_registration.json` |
+| `prosp.hypotheses` | 4 | pre-registered hypotheses (H1-H4) | `reports/prospective_registration.json` |
+| `prosp.fingerprints` | E6 5e0d331c310c, E7 bc54ce676ff4 | fingerprints of the frozen models (first 12 hex digits) | `reports/prospective_registration.json` |
+| `prosp.test_uses` | 3 | logged uses of the 2024-26 test period (Step 2, Step 3, prospective freeze) | `data/eval/test_access_log.jsonl` |
+
 ## Consistency checks
 
 | Check | Result |
@@ -90,3 +196,14 @@ Slides and documents quote the **Display** column; cite the ID in speaker notes.
 | all cleaning checks PASS or WARN, none FAIL | PASS  |
 | variance shares sum to 1 | PASS  |
 | fig8 noise floor = evaluation noise floor | PASS  |
+| backtest 2023 E6 known_site = Step 3 validation | PASS 0.272260 |
+| backtest 2023 E7 unseen_site = Step 3 validation | PASS 0.307801 |
+| backtest 2023 B6 known_site = Step 3 validation | PASS 0.277177 |
+| backtest 2023 B7 unseen_site = Step 3 validation | PASS 0.315261 |
+| backtest 2022 E6 known_site = Step 3 second validation year | PASS 0.271729 |
+| backtest 2022 E7 unseen_site = Step 3 second validation year | PASS 0.326659 |
+| backtest 2023 B5p known_site = Step 2 validation | PASS  |
+| backtest 2023 B4p unseen_site = Step 2 validation | PASS  |
+| C0 coverage 2023 (study) = Step 3 validation E6 coverage | PASS  |
+| fig9 CSV matches the calibration study | PASS  |
+| registration cutoff covers every modeling sample | PASS  |

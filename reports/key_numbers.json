@@ -471,6 +471,737 @@
       "display": "84%-89%",
       "label": "80%-interval coverage of the neighbor baselines in calm 2023 (too wide)",
       "source": "data/eval/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E6",
+      "value": 0.2722598309530276,
+      "display": "0.272",
+      "label": "RMSE mg/L, E6, validation 2023, known site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E6_vs_B5",
+      "value": -0.03195812332555842,
+      "display": "-0.032 [-0.045, -0.020]",
+      "label": "RMSE difference E6 - B5 [95% cluster-bootstrap CI], validation 2023, known site",
+      "source": "data/eval/step3/val/comparisons.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E6_gain_vs_B5",
+      "value": 0.10505008950356998,
+      "display": "11%",
+      "label": "relative error cut E6 vs. B5, validation 2023, known site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E6_coverage80",
+      "value": 0.8295537673738113,
+      "display": "83%",
+      "label": "80%-interval coverage, E6, validation 2023, known site (original in-sample calibration)",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E6_auc_lt25",
+      "value": 0.9586722501151038,
+      "display": "0.96",
+      "label": "AUC for flagging samples < 2.5 mg/L, E6, validation 2023, known site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E6_alarm_lt25",
+      "value": [
+        0.6274509803921569,
+        0.0325530358449158,
+        0.018653986832479885
+      ],
+      "display": "catches 63% of samples < 2.5 while flagging 3% (base rate 1.9%)",
+      "label": "alarm rule 'lower 10% bound < 2.5 mg/L', E6, validation 2023, known site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.unseen_site.E7",
+      "value": 0.3078009904069873,
+      "display": "0.308",
+      "label": "RMSE mg/L, E7, validation 2023, unseen site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.unseen_site.E7_vs_B4",
+      "value": -0.00800153168450124,
+      "display": "-0.008 [-0.024, +0.004]",
+      "label": "RMSE difference E7 - B4 [95% cluster-bootstrap CI], validation 2023, unseen site",
+      "source": "data/eval/step3/val/comparisons.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.unseen_site.E7_gain_vs_B4",
+      "value": 0.02533713673820248,
+      "display": "3%",
+      "label": "relative error cut E7 vs. B4, validation 2023, unseen site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.unseen_site.E7_coverage80",
+      "value": 0.8269934162399415,
+      "display": "83%",
+      "label": "80%-interval coverage, E7, validation 2023, unseen site (original in-sample calibration)",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.unseen_site.E7_auc_lt25",
+      "value": 0.9325893607536194,
+      "display": "0.93",
+      "label": "AUC for flagging samples < 2.5 mg/L, E7, validation 2023, unseen site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.unseen_site.E7_alarm_lt25",
+      "value": [
+        0.5686274509803921,
+        0.0354791514264813,
+        0.018653986832479885
+      ],
+      "display": "catches 57% of samples < 2.5 while flagging 4% (base rate 1.9%)",
+      "label": "alarm rule 'lower 10% bound < 2.5 mg/L', E7, validation 2023, unseen site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.outage.E6",
+      "value": 0.3562690079642233,
+      "display": "0.356",
+      "label": "RMSE mg/L, E6, pre-2024 Kubala outages, leave-one-out, outage",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.outage.E6_vs_B5p",
+      "value": -0.04890405683094584,
+      "display": "-0.049 [-0.068, -0.032]",
+      "label": "RMSE difference E6 - B5p [95% cluster-bootstrap CI], pre-2024 Kubala outages, leave-one-out, outage",
+      "source": "data/eval/step3/val/comparisons.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.outage.E6_gain_vs_B5p",
+      "value": 0.12069918037535088,
+      "display": "12%",
+      "label": "relative error cut E6 vs. B5p, pre-2024 Kubala outages, leave-one-out, outage",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.outage.E6_coverage80",
+      "value": 0.749531542785759,
+      "display": "75%",
+      "label": "80%-interval coverage, E6, pre-2024 Kubala outages, leave-one-out, outage (original in-sample calibration)",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.outage.E6_auc_lt25",
+      "value": 0.9497592361436176,
+      "display": "0.95",
+      "label": "AUC for flagging samples < 2.5 mg/L, E6, pre-2024 Kubala outages, leave-one-out, outage",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.outage.E6_alarm_lt25",
+      "value": [
+        0.9522546419098143,
+        0.4091193004372267,
+        0.23547782635852593
+      ],
+      "display": "catches 95% of samples < 2.5 while flagging 41% (base rate 23.5%)",
+      "label": "alarm rule 'lower 10% bound < 2.5 mg/L', E6, pre-2024 Kubala outages, leave-one-out, outage",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.B6",
+      "value": 0.2771771951685941,
+      "display": "0.277",
+      "label": "RMSE mg/L, B6, validation 2023, known site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.unseen_site.B7",
+      "value": 0.3152613663788192,
+      "display": "0.315",
+      "label": "RMSE mg/L, B7, validation 2023, unseen site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E7",
+      "value": 0.2882999217578771,
+      "display": "0.288",
+      "label": "RMSE mg/L, E7, validation 2023, known site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E7_coverage80",
+      "value": 0.8372348207754207,
+      "display": "84%",
+      "label": "80%-interval coverage, E7, validation 2023, known site (original in-sample calibration)",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E7_auc_lt25",
+      "value": 0.9496904986370248,
+      "display": "0.95",
+      "label": "AUC for flagging samples < 2.5 mg/L, E7, validation 2023, known site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.val.known_site.E7_alarm_lt25",
+      "value": [
+        0.6078431372549019,
+        0.0321872713972201,
+        0.018653986832479885
+      ],
+      "display": "catches 61% of samples < 2.5 while flagging 3% (base rate 1.9%)",
+      "label": "alarm rule 'lower 10% bound < 2.5 mg/L', E7, validation 2023, known site",
+      "source": "data/eval/step3/val/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E6",
+      "value": 0.3100782817035342,
+      "display": "0.310",
+      "label": "RMSE mg/L, E6, test 2024-26, known site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E6_vs_B5",
+      "value": -0.042086469603007715,
+      "display": "-0.042 [-0.055, -0.029]",
+      "label": "RMSE difference E6 - B5 [95% cluster-bootstrap CI], test 2024-26, known site",
+      "source": "data/eval/step3/test/comparisons.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E6_gain_vs_B5",
+      "value": 0.1195078992058849,
+      "display": "12%",
+      "label": "relative error cut E6 vs. B5, test 2024-26, known site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E6_coverage80",
+      "value": 0.7546296296296297,
+      "display": "75%",
+      "label": "80%-interval coverage, E6, test 2024-26, known site (original in-sample calibration)",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E6_auc_lt25",
+      "value": 0.9268392857142858,
+      "display": "0.93",
+      "label": "AUC for flagging samples < 2.5 mg/L, E6, test 2024-26, known site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E6_alarm_lt25",
+      "value": [
+        0.46875,
+        0.0244107744107744,
+        0.017957351290684626
+      ],
+      "display": "catches 47% of samples < 2.5 while flagging 2% (base rate 1.8%)",
+      "label": "alarm rule 'lower 10% bound < 2.5 mg/L', E6, test 2024-26, known site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.unseen_site.E7",
+      "value": 0.351868875041441,
+      "display": "0.352",
+      "label": "RMSE mg/L, E7, test 2024-26, unseen site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.unseen_site.E7_vs_B4",
+      "value": -0.016036483536912893,
+      "display": "-0.016 [-0.030, -0.001]",
+      "label": "RMSE difference E7 - B4 [95% cluster-bootstrap CI], test 2024-26, unseen site",
+      "source": "data/eval/step3/test/comparisons.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.unseen_site.E7_gain_vs_B4",
+      "value": 0.043588610937553285,
+      "display": "4%",
+      "label": "relative error cut E7 vs. B4, test 2024-26, unseen site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.unseen_site.E7_coverage80",
+      "value": 0.7330246913580247,
+      "display": "73%",
+      "label": "80%-interval coverage, E7, test 2024-26, unseen site (original in-sample calibration)",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.unseen_site.E7_auc_lt25",
+      "value": 0.8770814732142858,
+      "display": "0.88",
+      "label": "AUC for flagging samples < 2.5 mg/L, E7, test 2024-26, unseen site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.unseen_site.E7_alarm_lt25",
+      "value": [
+        0.3671875,
+        0.0266554433221099,
+        0.017957351290684626
+      ],
+      "display": "catches 37% of samples < 2.5 while flagging 3% (base rate 1.8%)",
+      "label": "alarm rule 'lower 10% bound < 2.5 mg/L', E7, test 2024-26, unseen site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.B6",
+      "value": 0.3176157521077761,
+      "display": "0.318",
+      "label": "RMSE mg/L, B6, test 2024-26, known site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.unseen_site.B7",
+      "value": 0.3644610761455402,
+      "display": "0.364",
+      "label": "RMSE mg/L, B7, test 2024-26, unseen site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E7",
+      "value": 0.3321853881954015,
+      "display": "0.332",
+      "label": "RMSE mg/L, E7, test 2024-26, known site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E7_coverage80",
+      "value": 0.7593995510662177,
+      "display": "76%",
+      "label": "80%-interval coverage, E7, test 2024-26, known site (original in-sample calibration)",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E7_auc_lt25",
+      "value": 0.8997801339285715,
+      "display": "0.90",
+      "label": "AUC for flagging samples < 2.5 mg/L, E7, test 2024-26, known site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E7_alarm_lt25",
+      "value": [
+        0.3671875,
+        0.0231481481481481,
+        0.017957351290684626
+      ],
+      "display": "catches 37% of samples < 2.5 while flagging 2% (base rate 1.8%)",
+      "label": "alarm rule 'lower 10% bound < 2.5 mg/L', E7, test 2024-26, known site",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E6.jk_offline",
+      "value": [
+        0.3631154516155168,
+        0.4115725322452842
+      ],
+      "display": "0.363 vs. B5p 0.412 (n=658)",
+      "label": "test 2024-26 RMSE during Kubala outages, known sites",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.known_site.E6.new_sites",
+      "value": [
+        0.3094732118007119,
+        0.3653208354076833
+      ],
+      "display": "0.309 vs. B5p 0.365 (n=817)",
+      "label": "test 2024-26 RMSE at places new since 2023, known sites",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Final models (Step 3: E6 known sites, E7 unseen sites)",
+      "id": "final.test.coverage_range",
+      "value": [
+        0.7330246913580247,
+        0.7593995510662177
+      ],
+      "display": "73%-76%",
+      "label": "80%-interval coverage on test 2024-26 of E6 and E7 in both protocols (original in-sample calibration): too narrow, the problem addressed below",
+      "source": "data/eval/step3/test/results.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.known_site.E6_beats_B5p_years",
+      "value": 7,
+      "display": "7 of 7",
+      "label": "years in which E6 has lower RMSE than B5p",
+      "source": "reports/figures/fig10_backtest_by_year.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.known_site.E6_beats_B6_years",
+      "value": 7,
+      "display": "7 of 7",
+      "label": "years in which E6 has lower RMSE than kriging alone (B6)",
+      "source": "reports/figures/fig10_backtest_by_year.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.known_site.E6_minus_B5p",
+      "value": -0.0402723932443422,
+      "display": "-0.040 [-0.048, -0.032]",
+      "label": "pooled 2017-2023 RMSE difference E6 - B5p [95% CI, places resampled]",
+      "source": "reports/figures/fig10_backtest_by_year.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.known_site.E6_minus_B6",
+      "value": -0.0042136048053444,
+      "display": "-0.004 [-0.007, -0.001]",
+      "label": "pooled 2017-2023 RMSE difference E6 - B6 [95% CI, places resampled]",
+      "source": "reports/figures/fig10_backtest_by_year.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.unseen_site.E7_beats_B4p_years",
+      "value": 7,
+      "display": "7 of 7",
+      "label": "years in which E7 has lower RMSE than B4p",
+      "source": "reports/figures/fig10_backtest_by_year.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.unseen_site.E7_beats_B7_years",
+      "value": 7,
+      "display": "7 of 7",
+      "label": "years in which E7 has lower RMSE than kriging alone (B7)",
+      "source": "reports/figures/fig10_backtest_by_year.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.unseen_site.E7_minus_B4p",
+      "value": -0.0194498781144666,
+      "display": "-0.019 [-0.031, -0.008]",
+      "label": "pooled 2017-2023 RMSE difference E7 - B4p [95% CI, places resampled]",
+      "source": "reports/figures/fig10_backtest_by_year.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.unseen_site.E7_minus_B7",
+      "value": -0.0113370633510341,
+      "display": "-0.011 [-0.021, -0.004]",
+      "label": "pooled 2017-2023 RMSE difference E7 - B7 [95% CI, places resampled]",
+      "source": "reports/figures/fig10_backtest_by_year.csv"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.known_site.B6_minus_B5p",
+      "value": -0.036058788438997846,
+      "display": "-0.036 [-0.042, -0.029]",
+      "label": "pooled 2017-2023: kriging alone (B6) minus the best baseline (B5p), known site",
+      "source": "data/eval/backtest/dev_members.parquet"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.unseen_site.B7_minus_B4p",
+      "value": -0.008112814763432563,
+      "display": "-0.008 [-0.018, +0.002]",
+      "label": "pooled 2017-2023: kriging alone (B7) minus the best baseline (B4p), unseen site",
+      "source": "data/eval/backtest/dev_members.parquet"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.unseen_site.E7s_minus_E7",
+      "value": -3.5254357095504396e-05,
+      "display": "-0.000 [-0.001, +0.001]",
+      "label": "pooled 2017-2023: strictly public E7s (no utility region code) minus E7, unseen site",
+      "source": "data/eval/backtest/dev_public_strict.parquet"
+    },
+    {
+      "section": "Rolling backtest 2017-2023 (development data only)",
+      "id": "backtest.known_site.E7s_minus_E7",
+      "value": -0.000140224779738074,
+      "display": "-0.000 [-0.001, +0.001]",
+      "label": "pooled 2017-2023: strictly public E7s (no utility region code) minus E7, known site",
+      "source": "data/eval/backtest/dev_public_strict.parquet"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C0.coverage",
+      "value": 0.8060584971178549,
+      "display": "80.6% (years 77%-85%; 4 of 5 in 75-85%)",
+      "label": "80%-interval coverage, C0, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C0.coverage_outage",
+      "value": 0.7741237379971804,
+      "display": "77.4%",
+      "label": "mean coverage during Kubala outages (2019-2022), C0, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C0.interval_score",
+      "value": 1.0935542518081225,
+      "display": "1.094",
+      "label": "mean interval score (lower is better), C0, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C1.coverage",
+      "value": 0.8141831093235169,
+      "display": "81.4% (years 78%-86%; 4 of 5 in 75-85%)",
+      "label": "80%-interval coverage, C1, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C1.coverage_outage",
+      "value": 0.8188859297411487,
+      "display": "81.9%",
+      "label": "mean coverage during Kubala outages (2019-2022), C1, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C1.interval_score",
+      "value": 1.1083020980056333,
+      "display": "1.108",
+      "label": "mean interval score (lower is better), C1, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C2.coverage",
+      "value": 0.8038926475615231,
+      "display": "80.4% (years 78%-82%; 5 of 5 in 75-85%)",
+      "label": "80%-interval coverage, C2, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C2.coverage_outage",
+      "value": 0.8354286182103413,
+      "display": "83.5%",
+      "label": "mean coverage during Kubala outages (2019-2022), C2, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.C2.interval_score",
+      "value": 1.1001306464981138,
+      "display": "1.100",
+      "label": "mean interval score (lower is better), C2, known site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.selected",
+      "value": "C0",
+      "display": "C0",
+      "label": "interval method chosen by the pre-declared rule, known site",
+      "source": "data/eval/calibration/selection.json"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C0.coverage",
+      "value": 0.7869642113252859,
+      "display": "78.7% (years 74%-83%; 4 of 5 in 75-85%)",
+      "label": "80%-interval coverage, C0, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C0.coverage_outage",
+      "value": 0.7450526446992346,
+      "display": "74.5%",
+      "label": "mean coverage during Kubala outages (2019-2022), C0, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C0.interval_score",
+      "value": 1.298758404177828,
+      "display": "1.299",
+      "label": "mean interval score (lower is better), C0, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C1.coverage",
+      "value": 0.8170139483035461,
+      "display": "81.7% (years 77%-87%; 4 of 5 in 75-85%)",
+      "label": "80%-interval coverage, C1, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C1.coverage_outage",
+      "value": 0.8235452420096665,
+      "display": "82.4%",
+      "label": "mean coverage during Kubala outages (2019-2022), C1, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C1.interval_score",
+      "value": 1.3052689981281425,
+      "display": "1.305",
+      "label": "mean interval score (lower is better), C1, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C2.coverage",
+      "value": 0.7788257934710838,
+      "display": "77.9% (years 75%-79%; 5 of 5 in 75-85%)",
+      "label": "80%-interval coverage, C2, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C2.coverage_outage",
+      "value": 0.8181055772456683,
+      "display": "81.8%",
+      "label": "mean coverage during Kubala outages (2019-2022), C2, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.C2.interval_score",
+      "value": 1.2924703402383468,
+      "display": "1.292",
+      "label": "mean interval score (lower is better), C2, unseen site",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.unseen_site.selected",
+      "value": "C2 (gamma=0.1)",
+      "display": "C2",
+      "label": "interval method chosen by the pre-declared rule, unseen site",
+      "source": "data/eval/calibration/selection.json"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.known_site.outage_2020",
+      "value": [
+        0.6400911161731208,
+        0.7437357630979499
+      ],
+      "display": "64% -> 74%",
+      "label": "coverage during the 2020 Kubala outage, C0 -> C2 (known sites)",
+      "source": "data/eval/calibration/study.csv"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.horizon_max_coverage_gap",
+      "value": 0.022857142857142798,
+      "display": "0.023",
+      "label": "largest coverage difference, yearly retraining vs. none, 1-3 years after training (E6 known, E7 unseen; E7 at known sites: 0.033)",
+      "source": "data/eval/backtest/horizon_2019_2022.parquet, data/eval/backtest/dev.parquet"
+    },
+    {
+      "section": "Prediction intervals (rolling calibration study 2019-2023)",
+      "id": "cal.horizon_max_rmse_gap",
+      "value": 0.004410658953281743,
+      "display": "0.004 mg/L",
+      "label": "largest RMSE difference, no retraining vs. yearly retraining (E6 known, E7 unseen)",
+      "source": "data/eval/backtest/horizon_2019_2022.parquet, data/eval/backtest/dev.parquet"
+    },
+    {
+      "section": "Prospective test (fresh test set)",
+      "id": "prosp.cutoff",
+      "value": "2026-08-02",
+      "display": "2026-08-02",
+      "label": "frozen models trained on all samples up to this date",
+      "source": "reports/prospective_registration.json"
+    },
+    {
+      "section": "Prospective test (fresh test set)",
+      "id": "prosp.training_rows",
+      "value": 30701,
+      "display": "30,701",
+      "label": "training samples of the frozen models",
+      "source": "reports/prospective_registration.json"
+    },
+    {
+      "section": "Prospective test (fresh test set)",
+      "id": "prosp.when",
+      "value": "once, on the first export with at least 12 months of samples after the cutoff",
+      "display": "once, on the first export with at least 12 months of samples after the cutoff",
+      "label": "when the single prospective evaluation runs",
+      "source": "reports/prospective_registration.json"
+    },
+    {
+      "section": "Prospective test (fresh test set)",
+      "id": "prosp.hypotheses",
+      "value": 4,
+      "display": "4",
+      "label": "pre-registered hypotheses (H1-H4)",
+      "source": "reports/prospective_registration.json"
+    },
+    {
+      "section": "Prospective test (fresh test set)",
+      "id": "prosp.fingerprints",
+      "value": {
+        "E6": "5e0d331c310cb81f9f2af0c9b0adf54500f380d0ab20e5fb55ef4f76a3d740c3",
+        "E7": "bc54ce676ff4b12c7e04694a09402901af667ec7d3b1273d36f9c37e7dc52116"
+      },
+      "display": "E6 5e0d331c310c, E7 bc54ce676ff4",
+      "label": "fingerprints of the frozen models (first 12 hex digits)",
+      "source": "reports/prospective_registration.json"
+    },
+    {
+      "section": "Prospective test (fresh test set)",
+      "id": "prosp.test_uses",
+      "value": 3,
+      "display": "3",
+      "label": "logged uses of the 2024-26 test period (Step 2, Step 3, prospective freeze)",
+      "source": "data/eval/test_access_log.jsonl"
     }
   ],
   "checks": [
@@ -501,6 +1232,61 @@
     },
     {
       "check": "fig8 noise floor = evaluation noise floor",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "backtest 2023 E6 known_site = Step 3 validation",
+      "ok": true,
+      "detail": "0.272260"
+    },
+    {
+      "check": "backtest 2023 E7 unseen_site = Step 3 validation",
+      "ok": true,
+      "detail": "0.307801"
+    },
+    {
+      "check": "backtest 2023 B6 known_site = Step 3 validation",
+      "ok": true,
+      "detail": "0.277177"
+    },
+    {
+      "check": "backtest 2023 B7 unseen_site = Step 3 validation",
+      "ok": true,
+      "detail": "0.315261"
+    },
+    {
+      "check": "backtest 2022 E6 known_site = Step 3 second validation year",
+      "ok": true,
+      "detail": "0.271729"
+    },
+    {
+      "check": "backtest 2022 E7 unseen_site = Step 3 second validation year",
+      "ok": true,
+      "detail": "0.326659"
+    },
+    {
+      "check": "backtest 2023 B5p known_site = Step 2 validation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "backtest 2023 B4p unseen_site = Step 2 validation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "C0 coverage 2023 (study) = Step 3 validation E6 coverage",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "fig9 CSV matches the calibration study",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "registration cutoff covers every modeling sample",
       "ok": true,
       "detail": ""
     }
